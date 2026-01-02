@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Skills Tab</title>
+</head>
+<body>
+<div style="margin: 30px 0; padding: 20px; background: rgba(237, 111, 45, 0.1); border-radius: 12px; border: 2px solid rgba(237, 111, 45, 0.3);">
+    <label style="display: block; margin-bottom: 15px; font-size: 1.1em;"><strong>Select Skill Types:</strong></label>
+    <div style="display: flex; gap: 12px;">
+        <label class="skill-checkbox-label">
+            <input type="checkbox" id="skill-type-basic" class="skill-checkbox" value="basic-attack">
+            <span class="skill-checkbox-text">Basic Attack</span>
+        </label>
+        <label class="skill-checkbox-label">
+            <input type="checkbox" id="skill-type-technique" class="skill-checkbox" value="technique">
+            <span class="skill-checkbox-text">Technique</span>
+        </label>
+        <label class="skill-checkbox-label">
+            <input type="checkbox" id="skill-type-counter" class="skill-checkbox" value="counter">
+            <span class="skill-checkbox-text">Counter</span>
+        </label>
+        <label class="skill-checkbox-label">
+            <input type="checkbox" id="skill-type-ultimate" class="skill-checkbox" value="ultimate">
+            <span class="skill-checkbox-text">Ultimate</span>
+        </label>
+    </div>
+</div>
+
+<div class="input-group">
+    <label>Current Level</label>
+    <select id="skill-current-level">
+        <option value="1" selected>1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+    </select>
+</div>
+
+<div class="input-group">
+    <label>Target Level</label>
+    <select id="skill-target-level">
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9" selected>9</option>
+    </select>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 25px;">
+    <div class="input-group" style="margin-bottom: 0;">
+        <label>Arts Owned:</label>
+        <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+            <div class="colored-input colored-input-green">
+                <span style="color: #4ade80;">●</span>
+                <input type="number" id="skill-green-art-owned" min="0" value="0" placeholder="0">
+            </div>
+            <div class="colored-input colored-input-blue">
+                <span style="color: #3b82f6;">●</span>
+                <input type="number" id="skill-blue-art-owned" min="0" value="0" placeholder="0">
+            </div>
+            <div class="colored-input colored-input-purple">
+                <span style="color: #a855f7;">●</span>
+                <input type="number" id="skill-purple-art-owned" min="0" value="0" placeholder="0">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="conversion-tile" style="margin: 30px 0; padding: 15px 25px; background: linear-gradient(135deg, rgba(156, 39, 176, 0.15), rgba(33, 150, 243, 0.15)); border-radius: 12px; border: 2px solid rgba(156, 39, 176, 0.4); transition: padding 0.3s ease;">
+    <h3 onclick="toggleConversion()" style="margin: 0; text-align: center; color: var(--result-value); font-size: 1.2em; cursor: pointer; user-select: none; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <span id="conversion-arrow" style="transition: transform 0.3s; transform: rotate(-90deg);">▼</span>
+        <span>Material Conversion (Art)</span>
+    </h3>
+    <div id="conversion-content" style="margin-top: 0; transition: all 0.3s ease; display: none;">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 10px;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                <span style="padding: 8px 14px; background: rgba(156, 39, 176, 0.3); border-radius: 4px; border: 1.5px solid #9C27B0; font-weight: 700; color: #9C27B0; font-size: 1.1em;">1</span>
+                <span style="color: var(--result-value); font-size: 1.2em;">→</span>
+                <span style="padding: 8px 14px; background: rgba(33, 150, 243, 0.3); border-radius: 4px; border: 1.5px solid #2196F3; font-weight: 700; color: #2196F3; font-size: 1.1em;">3</span>
+                <span style="color: var(--result-value); margin: 0 5px; font-size: 0.9em;">or</span>
+                <span style="padding: 8px 14px; background: rgba(76, 175, 80, 0.3); border-radius: 4px; border: 1.5px solid #4CAF50; font-weight: 700; color: #4CAF50; font-size: 1.1em;">9</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                <span style="padding: 8px 14px; background: rgba(33, 150, 243, 0.3); border-radius: 4px; border: 1.5px solid #2196F3; font-weight: 700; color: #2196F3; font-size: 1.1em;">1</span>
+                <span style="color: var(--result-value); font-size: 1.2em;">→</span>
+                <span style="padding: 8px 14px; background: rgba(76, 175, 80, 0.3); border-radius: 4px; border: 1.5px solid #4CAF50; font-weight: 700; color: #4CAF50; font-size: 1.1em;">3</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="skill-results" class="results" style="margin-top: 30px;">
+    <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+        <div class="result-card result-card-green">
+            <div class="result-card-label">Green Arts needed</div>
+            <div class="result-card-value" id="skill-green-art">0</div>
+        </div>
+        <div class="result-card result-card-blue">
+            <div class="result-card-label">Blue Arts needed</div>
+            <div class="result-card-value" id="skill-blue-art">0</div>
+        </div>
+        <div class="result-card result-card-purple">
+            <div class="result-card-label">Purple Arts needed</div>
+            <div class="result-card-value" id="skill-purple-art">0</div>
+        </div>
+        <div class="result-card result-card-kans">
+            <div class="result-card-label">Kans Cost needed</div>
+            <div class="result-card-value" id="skill-kans">0</div>
+        </div>
+    </div>
+    <div id="skill-breakdown" style="padding-top: 15px; border-top: 2px solid rgba(237, 111, 45, 0.2);">
+        <div id="skill-breakdown-content"></div>
+    </div>
+</div>
+
+<hr style="margin: 40px 0; border: none; border-top: 2px solid var(--input-border); opacity: 0.3;">
+
+<div style="margin-top: 40px;">
+    <h2 style="margin: 0 0 20px 0; color: var(--result-value); text-align: center;">Passives</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px;">
+        <!-- Passive Boost 1 Calculator -->
+        <div style="padding: 20px; background: var(--card-bg); border: 2px solid var(--input-border); border-radius: 12px; display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: var(--result-value);">Passive Boost 1</h3>
+                <div style="width: 100px;"></div>
+            </div>
+            
+            <div class="input-group">
+                <label>Current Level</label>
+                <select id="passive1-current-level">
+                    <option value="0" selected>0 (Not acquired)</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Target Level</label>
+                <select id="passive1-target-level">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1;">
+                <div class="result-item">
+                    <span class="result-label">Total Omamori:</span>
+                    <span class="result-value" id="passive1-omamori">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Kans:</span>
+                    <span class="result-value" id="passive1-kans">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Passive Boost 2 Calculator -->
+        <div style="padding: 20px; background: var(--card-bg); border: 2px solid var(--input-border); border-radius: 12px; display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: var(--result-value);">Passive Boost 2</h3>
+                <div style="width: 100px;"></div>
+            </div>
+            
+            <div class="input-group">
+                <label>Current Level</label>
+                <select id="passive2-current-level">
+                    <option value="0" selected>0 (Not acquired)</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Target Level</label>
+                <select id="passive2-target-level">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1;">
+                <div class="result-item">
+                    <span class="result-label">Total Omamori:</span>
+                    <span class="result-value" id="passive2-omamori">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Kans:</span>
+                    <span class="result-value" id="passive2-kans">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Passive Boost 3 Calculator -->
+        <div style="padding: 20px; background: var(--card-bg); border: 2px solid var(--input-border); border-radius: 12px; display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: var(--result-value);">Passive Boost 3</h3>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; white-space: nowrap;">
+                    <input type="checkbox" id="passive3-toggle" checked style="cursor: pointer; width: 18px; height: 18px;">
+                    <span id="passive3-toggle-label" style="font-size: 0.9em; color: var(--text-secondary);">SSR</span>
+                </label>
+            </div>
+            
+            <div class="input-group">
+                <label>Current Level</label>
+                <select id="passive3-current-level">
+                    <option value="0" selected>0 (Not acquired)</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Target Level</label>
+                <select id="passive3-target-level" onchange="togglePassive3Warning()">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1;">
+                <div class="result-item">
+                    <span class="result-label">Total Omamori:</span>
+                    <span class="result-value" id="passive3-omamori">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Kans:</span>
+                    <span class="result-value" id="passive3-kans">0</span>
+                </div>
+                <div id="passive3-warning" style="padding: 10px; margin-top: 5px; background: rgba(237, 111, 45, 0.15); border-left: 3px solid #ed6f2d; border-radius: 4px; font-size: 0.85em; color: #ed6f2d; display: none;"><strong>⚠ Level 3 Kans cost is not yet known</strong></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.skill-checkbox-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 15px;
+    background: var(--input-bg);
+    border: 2px solid var(--input-border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    flex: 1;
+}
+
+.skill-checkbox {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: #ed6f2d;
+}
+
+.skill-checkbox-label:hover {
+    border-color: #ed6f2d;
+    background: rgba(237, 111, 45, 0.05);
+}
+
+.skill-checkbox:checked + .skill-checkbox-text {
+    color: #ed6f2d;
+    font-weight: 700;
+}
+
+.skill-checkbox-label:has(.skill-checkbox:checked) {
+    background: rgba(237, 111, 45, 0.15);
+    border-color: #ed6f2d;
+}
+
+.result-card {
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+}
+
+.result-card-green {
+    border-color: #4CAF50;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.result-card-blue {
+    border-color: #2196F3;
+    background: rgba(33, 150, 243, 0.1);
+}
+
+.result-card-purple {
+    border-color: #9C27B0;
+    background: rgba(156, 39, 176, 0.1);
+}
+
+.result-card-kans {
+    border-color: #ed6f2d;
+    background: rgba(237, 111, 45, 0.1);
+}
+
+.result-card-label {
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    opacity: 0.8;
+}
+
+.result-card-value {
+    font-size: 1.8em;
+    font-weight: 800;
+    color: var(--result-value);
+}
+
+.result-card-green .result-card-value {
+    color: #4CAF50;
+}
+
+.result-card-blue .result-card-value {
+    color: #2196F3;
+}
+
+.result-card-purple .result-card-value {
+    color: #9C27B0;
+}
+
+.result-card-kans .result-card-value {
+    color: #ed6f2d;
+}
+
+.input-group {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 6px;
+}
+
+.input-group select,
+.input-group input {
+    min-height: 40px;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+</style>
+</body>
+</html>
