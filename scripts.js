@@ -1546,9 +1546,9 @@ document.addEventListener('DOMContentLoaded', () => {
         dashboardTab.style.display = 'none';
     }
     
-    // Secret keyboard shortcut to show login (&+é+")
+    // Secret keyboard shortcut to show login (Ctrl+Shift+Alt+W)
     document.addEventListener('keydown', (e) => {
-        if (e.key === '&' && e.key === 'é' && e.key === '"') {
+        if (e.ctrlKey && e.shiftKey && e.altKey && e.key === 'W') {
             e.preventDefault();
             showLoginModal();
         }
