@@ -350,6 +350,7 @@ async function attemptLogin() {
         if (data.success) {
             sessionStorage.setItem('bsrAdminAuth', 'true');
             closeLoginModal();
+            toggleDashboardTabVisibility();
             const dashboardTab = document.querySelector('.tab:nth-child(4)');
             if (dashboardTab) {
                 switchTab({ currentTarget: dashboardTab }, 'dashboard');
@@ -371,6 +372,13 @@ async function attemptLogin() {
 function closeLoginModal() {
     const modal = document.getElementById('loginModal');
     if (modal) modal.style.display = 'none';
+}
+
+function toggleDashboardTabVisibility() {
+    const dashboardTab = document.querySelector('.tabs .tab:nth-child(4)');
+    if (dashboardTab) {
+        dashboardTab.style.display = dashboardTab.style.display === 'none' ? '' : 'none';
+    }
 }
 
 function initDashboardUI() {
@@ -1531,6 +1539,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lightModeMessage) lightModeMessage.style.display = 'inline';
     }
     document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+    
+    // Hide dashboard tab initially (only show if authenticated)
+    const dashboardTab = document.querySelector('.tabs .tab:nth-child(4)');
+    if (dashboardTab && sessionStorage.getItem('bsrAdminAuth') !== 'true') {
+        dashboardTab.style.display = 'none';
+    }
+    
+    // Secret keyboard shortcut to show login (&+é+")
+    document.addEventListener('keydown', (e) => {
+        if (e.key === '&' && e.key === 'é' && e.key === '"') {
+            e.preventDefault();
+            showLoginModal();
+        }
+    });
 });
 
 // Load initial tab content for character
