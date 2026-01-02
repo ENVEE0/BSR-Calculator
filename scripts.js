@@ -325,26 +325,46 @@ function showLoginModal() {
     };
 }
 
-function attemptLogin() {
+async function attemptLogin() {
     const password = document.getElementById('loginPassword').value;
-    const correctPassword = 'admin';
     
     if (!password) {
         document.getElementById('loginError').textContent = 'Please enter a password';
         return;
     }
     
-    if (password === correctPassword) {
-        sessionStorage.setItem('bsrAdminAuth', 'true');
-        closeLoginModal();
-        const dashboardTab = document.querySelector('.tab:nth-child(4)');
-        if (dashboardTab) {
-            switchTab({ currentTarget: dashboardTab }, 'dashboard');
+    const loginBtn = document.querySelector('.login-buttons button:first-child');
+    const originalText = loginBtn.textContent;
+    loginBtn.textContent = 'Logging in...';
+    loginBtn.disabled = true;
+    
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            sessionStorage.setItem('bsrAdminAuth', 'true');
+            closeLoginModal();
+            const dashboardTab = document.querySelector('.tab:nth-child(4)');
+            if (dashboardTab) {
+                switchTab({ currentTarget: dashboardTab }, 'dashboard');
+            }
+        } else {
+            document.getElementById('loginError').textContent = data.message || 'Incorrect password';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginPassword').focus();
         }
-    } else {
-        document.getElementById('loginError').textContent = 'Incorrect password. Try again.';
-        document.getElementById('loginPassword').value = '';
-        document.getElementById('loginPassword').focus();
+    } catch (error) {
+        console.error('Login error:', error);
+        document.getElementById('loginError').textContent = 'Connection error. Please try again.';
+    } finally {
+        loginBtn.textContent = originalText;
+        loginBtn.disabled = false;
     }
 }
 
@@ -772,16 +792,8 @@ function initDashboardUI() {
                             kans: readNum('dash-passive3-3-kans', settings.passives.passive3[3].kans)
                         }
                     }
-                },
-                adminPassword: settings.adminPassword
+                }
             };
-
-            const pwdInput = document.getElementById('dash-admin-password');
-            if (pwdInput && pwdInput.value) {
-                newSettings.adminPassword = pwdInput.value;
-                pwdInput.value = '';
-                sessionStorage.removeItem('bsrAdminAuth');
-            }
 
             settings = newSettings;
             saveSettings(settings);
