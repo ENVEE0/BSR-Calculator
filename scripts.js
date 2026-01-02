@@ -296,15 +296,7 @@ async function loadTabContent(tabName) {
     }
 }
 
-function ensureAdminAccess() {
-    if (sessionStorage.getItem('bsrAdminAuth') === 'true') return true;
-    // Dashboard requires authentication - show login modal
-    showLoginModal();
-    return false;
-}
-
 function showLoginModal() {
-    // Create modal if it doesn't exist
     let modal = document.getElementById('loginModal');
     if (!modal) {
         modal = document.createElement('div');
@@ -335,7 +327,7 @@ function showLoginModal() {
 
 function attemptLogin() {
     const password = document.getElementById('loginPassword').value;
-    const correctPassword = 'admin'; // Change this to your desired password
+    const correctPassword = 'admin';
     
     if (!password) {
         document.getElementById('loginError').textContent = 'Please enter a password';
