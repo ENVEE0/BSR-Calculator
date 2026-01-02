@@ -172,8 +172,7 @@ const defaultSettings = {
             2: { omamori: 12, kans: 43500 },
             3: { omamori: 18, kans: 150000 }
         }
-    },
-    adminPassword: 'admin'
+    }
 };
 
 // Skill requirements data - reads from settings
@@ -214,8 +213,7 @@ function loadSettings() {
                 passive1: { ...defaultSettings.passives.passive1, ...(parsed.passives?.passive1 || {}) },
                 passive2: { ...defaultSettings.passives.passive2, ...(parsed.passives?.passive2 || {}) },
                 passive3: { ...defaultSettings.passives.passive3, ...(parsed.passives?.passive3 || {}) }
-            },
-            adminPassword: parsed.adminPassword || defaultSettings.adminPassword
+            }
         };
     } catch (e) {
         return structuredClone(defaultSettings);
@@ -300,14 +298,65 @@ async function loadTabContent(tabName) {
 
 function ensureAdminAccess() {
     if (sessionStorage.getItem('bsrAdminAuth') === 'true') return true;
-    const input = prompt('Enter dashboard password');
-    if (input === null) return false;
-    if (input === settings.adminPassword) {
-        sessionStorage.setItem('bsrAdminAuth', 'true');
-        return true;
-    }
-    alert('Incorrect password');
+    // Dashboard requires authentication - show login modal
+    showLoginModal();
     return false;
+}
+
+function showLoginModal() {
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('loginModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'loginModal';
+        modal.innerHTML = `
+            <div class="login-modal-content">
+                <h2>Dashboard Access</h2>
+                <p>This dashboard is restricted to authorized users only.</p>
+                <div class="input-group">
+                    <label>Password:</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password" autofocus>
+                </div>
+                <div class="login-buttons">
+                    <button onclick="attemptLogin()">Login</button>
+                    <button onclick="closeLoginModal()" class="secondary-btn">Cancel</button>
+                </div>
+                <div id="loginError" class="login-error"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    modal.style.display = 'flex';
+    document.getElementById('loginPassword').focus();
+    document.getElementById('loginPassword').onkeypress = (e) => {
+        if (e.key === 'Enter') attemptLogin();
+    };
+}
+
+function attemptLogin() {
+    const password = document.getElementById('loginPassword').value;
+    // Change 'your-password-here' to your desired password
+    // IMPORTANT: For better security, consider implementing server-side authentication
+    const correctPassword = 'your-password-here';
+    
+    if (password === correctPassword) {
+        sessionStorage.setItem('bsrAdminAuth', 'true');
+        closeLoginModal();
+        // Switch to dashboard tab
+        const dashboardTab = document.querySelector('.tab:nth-child(4)');
+        if (dashboardTab) {
+            switchTab({ currentTarget: dashboardTab }, 'dashboard');
+        }
+    } else {
+        document.getElementById('loginError').textContent = 'Incorrect password. Try again.';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('loginPassword').focus();
+    }
+}
+
+function closeLoginModal() {
+    const modal = document.getElementById('loginModal');
+    if (modal) modal.style.display = 'none';
 }
 
 function initDashboardUI() {
@@ -755,8 +804,11 @@ async function switchTab(e, tabName) {
     const tabs = document.querySelectorAll('.tab');
     const contents = document.querySelectorAll('.tab-content');
 
-    if (tabName === 'dashboard' && !ensureAdminAccess()) {
-        return;
+    if (tabName === 'dashboard') {
+        if (sessionStorage.getItem('bsrAdminAuth') !== 'true') {
+            showLoginModal();
+            return;
+        }
     }
     
     tabs.forEach(tab => tab.classList.remove('active'));
