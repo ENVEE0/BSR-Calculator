@@ -272,7 +272,13 @@ function getKanExpRequired(fromLevel, toLevel) {
 async function loadTabContent(tabName) {
     const container = document.getElementById(tabName);
     if (!container) return;
-    if (container.getAttribute('data-loaded') === 'true') return;
+    if (container.getAttribute('data-loaded') === 'true') {
+        // Even if already loaded, apply translations in case language changed
+        if (typeof applyTranslations === 'function') {
+            applyTranslations();
+        }
+        return;
+    }
     try {
         const res = await fetch(`tabs/${tabName}.html`);
         if (!res.ok) throw new Error('Failed to load ' + tabName);
@@ -290,6 +296,10 @@ async function loadTabContent(tabName) {
             initCharacterUI();
         } else if (tabName === 'weapon') {
             initWeaponUI();
+        }
+        // Apply translations after loading content
+        if (typeof applyTranslations === 'function') {
+            applyTranslations();
         }
     } catch (err) {
         container.innerHTML = '<div class="error show">Could not load tab content.</div>';
@@ -962,7 +972,7 @@ function calculateCharacter() {
 
     if (targetLevel <= currentLevel) {
         if (errorDiv) {
-            errorDiv.textContent = 'Target level must be higher than current level';
+            errorDiv.textContent = typeof t === 'function' ? t('character.error') : 'Target level must be higher than current level';
             errorDiv.classList.add('show');
         }
         return;
@@ -1005,7 +1015,8 @@ function calculateCharacter() {
     const totalEssencesOwned = greenEssences + blueEssences + purpleEssences;
     const totalEssencesNeeded = essencesNeeded.green + essencesNeeded.blue + essencesNeeded.purple;
     if (totalEssencesOwned >= totalEssencesNeeded) {
-        DOMHelpers.setText('char-essences-status', '✓ You have enough Essences!');
+        const essencesMsg = typeof t === 'function' ? t('character.enoughEssences') : '✓ You have enough Essences!';
+        DOMHelpers.setText('char-essences-status', essencesMsg);
         document.getElementById('char-essences-status').style.color = '#10b981';
         DOMHelpers.show('char-essences-status-container');
     } else {
@@ -1018,7 +1029,8 @@ function calculateCharacter() {
 
     // Display books status
     if (availableExp >= totalExp) {
-        DOMHelpers.setText('char-books-status', '✓ You have enough Books!');
+        const booksMsg = typeof t === 'function' ? t('character.enoughBooks') : '✓ You have enough Books!';
+        DOMHelpers.setText('char-books-status', booksMsg);
         document.getElementById('char-books-status').style.color = '#10b981';
         DOMHelpers.show('char-books-status-container');
     } else {
@@ -1048,21 +1060,27 @@ function calculateCharacter() {
     const purpleEssResult = document.getElementById('char-essences-purple')?.parentElement;
     
     if (essencesNeeded.green > 0) {
-        document.getElementById('char-essences-green').innerHTML = `${DOMHelpers.formatNum(essencesMissing.green)} <span style="color: white;">(of ${DOMHelpers.formatNum(essencesNeeded.green)} required)</span>`;
+        const requiredText = typeof t === 'function' ? t('common.required') : '(of {0} required)';
+        const filled = requiredText.replace('{0}', DOMHelpers.formatNum(essencesNeeded.green));
+        document.getElementById('char-essences-green').innerHTML = `${DOMHelpers.formatNum(essencesMissing.green)} <span style="color: white;">${filled}</span>`;
         if (greenEssResult) greenEssResult.style.display = '';
     } else {
         if (greenEssResult) greenEssResult.style.display = 'none';
     }
     
     if (essencesNeeded.blue > 0) {
-        document.getElementById('char-essences-blue').innerHTML = `${DOMHelpers.formatNum(essencesMissing.blue)} <span style="color: white;">(of ${DOMHelpers.formatNum(essencesNeeded.blue)} required)</span>`;
+        const requiredText = typeof t === 'function' ? t('common.required') : '(of {0} required)';
+        const filled = requiredText.replace('{0}', DOMHelpers.formatNum(essencesNeeded.blue));
+        document.getElementById('char-essences-blue').innerHTML = `${DOMHelpers.formatNum(essencesMissing.blue)} <span style="color: white;">${filled}</span>`;
         if (blueEssResult) blueEssResult.style.display = '';
     } else {
         if (blueEssResult) blueEssResult.style.display = 'none';
     }
     
     if (essencesNeeded.purple > 0) {
-        document.getElementById('char-essences-purple').innerHTML = `${DOMHelpers.formatNum(essencesMissing.purple)} <span style="color: white;">(of ${DOMHelpers.formatNum(essencesNeeded.purple)} required)</span>`;
+        const requiredText = typeof t === 'function' ? t('common.required') : '(of {0} required)';
+        const filled = requiredText.replace('{0}', DOMHelpers.formatNum(essencesNeeded.purple));
+        document.getElementById('char-essences-purple').innerHTML = `${DOMHelpers.formatNum(essencesMissing.purple)} <span style="color: white;">${filled}</span>`;
         if (purpleEssResult) purpleEssResult.style.display = '';
     } else {
         if (purpleEssResult) purpleEssResult.style.display = 'none';
@@ -1128,7 +1146,8 @@ function calculateWeapon() {
     const totalHammersOwned = ownedHammers.green + ownedHammers.blue + ownedHammers.purple;
     const totalMaterials = hammerNeeded.green + hammerNeeded.blue + hammerNeeded.purple;
     if (totalHammersOwned >= totalMaterials) {
-        DOMHelpers.setText('weapon-hammers-status', '✓ You have enough Hammers!');
+        const hammersMsg = typeof t === 'function' ? t('weapon.enoughHammers') : '✓ You have enough Hammers!';
+        DOMHelpers.setText('weapon-hammers-status', hammersMsg);
         document.getElementById('weapon-hammers-status').style.color = '#10b981';
         DOMHelpers.show('weapon-hammers-status-container');
     } else {
@@ -1157,7 +1176,8 @@ function calculateWeapon() {
     
     // Display tamahagane status
     if (availableExp >= tamahaganeXpRequired) {
-        DOMHelpers.setText('weapon-tamahagane-status', '✓ You have enough Tamahagane!');
+        const tamahaganeMsg = typeof t === 'function' ? t('weapon.enoughTamahagane') : '✓ You have enough Tamahagane!';
+        DOMHelpers.setText('weapon-tamahagane-status', tamahaganeMsg);
         document.getElementById('weapon-tamahagane-status').style.color = '#10b981';
         DOMHelpers.show('weapon-tamahagane-status-container');
     } else {
@@ -1186,21 +1206,27 @@ function calculateWeapon() {
     const purpleResult = document.getElementById('weapon-hammers-purple')?.parentElement;
     
     if (hammerNeeded.green > 0) {
-        document.getElementById('weapon-hammers-green').innerHTML = `<span style="color: #ff9500;">${DOMHelpers.formatNum(hammerMissing.green)}</span> <span style="color: white;">(of ${DOMHelpers.formatNum(hammerNeeded.green)} required)</span>`;
+        const requiredText = typeof t === 'function' ? t('common.required') : '(of {0} required)';
+        const filled = requiredText.replace('{0}', DOMHelpers.formatNum(hammerNeeded.green));
+        document.getElementById('weapon-hammers-green').innerHTML = `<span style="color: #ff9500;">${DOMHelpers.formatNum(hammerMissing.green)}</span> <span style="color: white;">${filled}</span>`;
         if (greenResult) greenResult.style.display = '';
     } else {
         if (greenResult) greenResult.style.display = 'none';
     }
     
     if (hammerNeeded.blue > 0) {
-        document.getElementById('weapon-hammers-blue').innerHTML = `<span style="color: #ff9500;">${DOMHelpers.formatNum(hammerMissing.blue)}</span> <span style="color: white;">(of ${DOMHelpers.formatNum(hammerNeeded.blue)} required)</span>`;
+        const requiredText = typeof t === 'function' ? t('common.required') : '(of {0} required)';
+        const filled = requiredText.replace('{0}', DOMHelpers.formatNum(hammerNeeded.blue));
+        document.getElementById('weapon-hammers-blue').innerHTML = `<span style="color: #ff9500;">${DOMHelpers.formatNum(hammerMissing.blue)}</span> <span style="color: white;">${filled}</span>`;
         if (blueResult) blueResult.style.display = '';
     } else {
         if (blueResult) blueResult.style.display = 'none';
     }
     
     if (hammerNeeded.purple > 0) {
-        document.getElementById('weapon-hammers-purple').innerHTML = `<span style="color: #ff9500;">${DOMHelpers.formatNum(hammerMissing.purple)}</span> <span style="color: white;">(of ${DOMHelpers.formatNum(hammerNeeded.purple)} required)</span>`;
+        const requiredText = typeof t === 'function' ? t('common.required') : '(of {0} required)';
+        const filled = requiredText.replace('{0}', DOMHelpers.formatNum(hammerNeeded.purple));
+        document.getElementById('weapon-hammers-purple').innerHTML = `<span style="color: #ff9500;">${DOMHelpers.formatNum(hammerMissing.purple)}</span> <span style="color: white;">${filled}</span>`;
         if (purpleResult) purpleResult.style.display = '';
     } else {
         if (purpleResult) purpleResult.style.display = 'none';

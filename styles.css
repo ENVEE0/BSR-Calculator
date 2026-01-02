@@ -21,6 +21,11 @@
     --error-color: #b02020;
 }
 
+/* Emoji font support */
+#language-select {
+    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+}
+
 
 body.dark {
     --bg-gradient: linear-gradient(135deg, #2f1609 0%, #000000 100%);

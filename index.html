@@ -9,8 +9,17 @@
 <body>
     <div class="container">
         <header>
-            <h1>⚔️ BSR Calculator</h1>
-            <p class="subtitle">Resource Calculator for Bleach Soul Resonance</p>
+            <h1 id="header-title">⚔️ BSR Calculator</h1>
+            <p class="subtitle" id="header-subtitle">Resource Calculator for Bleach Soul Resonance</p>
+            <div style="position: absolute; top: 20px; left: 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <select id="language-select" style="padding: 4px 8px; border-radius: 4px; cursor: pointer;">
+                        <option value="en">🇺🇸 English</option>
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="es">🇪🇸 Español</option>
+                    </select>
+                </div>
+            </div>
             <div style="position: absolute; top: 20px; right: 20px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
                 <button id="dark-mode-toggle" class="dark-mode-btn">🌙 Dark Mode</button>
                 <span id="light-mode-message" style="display: none; font-style: italic; opacity: 0.8; font-size: 0.85em;">Oh so you're one of those people.</span>
@@ -19,10 +28,10 @@
 
         <div class="calculator-container">
             <div class="tabs">
-                <button class="tab active" onclick="switchTab(event, 'character')">Characters</button>
-                <button class="tab" onclick="switchTab(event, 'weapon')">Weapons</button>
-                <button class="tab" onclick="switchTab(event, 'skills')">Skills</button>
-                <button class="tab" onclick="switchTab(event, 'dashboard')">Dashboard</button>
+                <button class="tab active" onclick="switchTab(event, 'character')" data-i18n="tabs.characters">Characters</button>
+                <button class="tab" onclick="switchTab(event, 'weapon')" data-i18n="tabs.weapons">Weapons</button>
+                <button class="tab" onclick="switchTab(event, 'skills')" data-i18n="tabs.skills">Skills</button>
+                <button class="tab" onclick="switchTab(event, 'dashboard')" data-i18n="tabs.dashboard">Dashboard</button>
             </div>
 
             <!-- Character Tab (content loaded from tabs/character.html) -->
@@ -40,9 +49,11 @@
     </div>
 
     <footer class="wip-footer">
-        <p>Work in progress (We don't have all the numbers and there can be errors)</p>
+        <p id="footer-credits" style="font-size: 1.3em; margin-bottom: 12px; opacity: 0.95;"></p>
+        <p id="footer-wip">Work in progress (We don't have all the numbers and there can be errors)</p>
     </footer>
 
+    <script src="i18n.js"></script>
     <script src="scripts.js"></script>
 </body>
 </html>
