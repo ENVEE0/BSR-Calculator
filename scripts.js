@@ -335,47 +335,25 @@ function showLoginModal() {
 
 function attemptLogin() {
     const password = document.getElementById('loginPassword').value;
+    const correctPassword = 'admin'; // Change this to your desired password
     
     if (!password) {
         document.getElementById('loginError').textContent = 'Please enter a password';
         return;
     }
     
-    // Show loading state
-    const loginBtn = document.querySelector('.login-buttons button:first-child');
-    const originalText = loginBtn.textContent;
-    loginBtn.textContent = 'Logging in...';
-    loginBtn.disabled = true;
-    
-    fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ password })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            sessionStorage.setItem('bsrAdminAuth', 'true');
-            closeLoginModal();
-            const dashboardTab = document.querySelector('.tab:nth-child(4)');
-            if (dashboardTab) {
-                switchTab({ currentTarget: dashboardTab }, 'dashboard');
-            }
-        } else {
-            document.getElementById('loginError').textContent = data.message || 'Incorrect password. Try again.';
-            document.getElementById('loginPassword').value = '';
-            document.getElementById('loginPassword').focus();
+    if (password === correctPassword) {
+        sessionStorage.setItem('bsrAdminAuth', 'true');
+        closeLoginModal();
+        const dashboardTab = document.querySelector('.tab:nth-child(4)');
+        if (dashboardTab) {
+            switchTab({ currentTarget: dashboardTab }, 'dashboard');
         }
-    })
-    .catch(error => {
-        console.error('Login error:', error);
-        document.getElementById('loginError').textContent = 'Login error. Please try again.';
-    })
-    .finally(() => {
-        loginBtn.textContent = originalText;
-        loginBtn.disabled = false;
-    });
+    } else {
+        document.getElementById('loginError').textContent = 'Incorrect password. Try again.';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('loginPassword').focus();
+    }
 }
 
 function closeLoginModal() {
