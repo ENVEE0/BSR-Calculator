@@ -1,3 +1,13 @@
+// Toggle edit mode for a dashboard tile
+function toggleTileEdit(btn) {
+    const tile = btn.closest('.tile');
+    const inputs = tile.querySelectorAll('input[type="number"], input[type="text"], input[type="checkbox"], input[type="radio"], textarea');
+    const isDisabled = inputs.length > 0 && inputs[0].disabled;
+    inputs.forEach(input => input.disabled = !isDisabled);
+    btn.textContent = isDisabled ? 'Lock' : 'Edit';
+    btn.classList.toggle('editing', isDisabled);
+    tile.classList.toggle('disabled', !isDisabled);
+}
 // Farming rewards data - All difficulty levels
 const farmingRewardsByLevel = {
     essence: {

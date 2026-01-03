@@ -1,3 +1,51 @@
+/* Disabled tile visual: use an overlay so specific elements can remain sharp and clickable */
+.tile.disabled {
+    position: relative;
+    opacity: 0.95;
+}
+.tile.disabled::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(3px) grayscale(0.12);
+    -webkit-backdrop-filter: blur(3px) grayscale(0.12);
+    z-index: 1;
+    pointer-events: auto;
+}
+.tile.disabled .tile-title,
+.tile.disabled .edit-toggle-btn {
+    position: relative;
+    z-index: 3;
+    filter: none;
+}
+.tile.disabled .edit-toggle-btn {
+    pointer-events: auto;
+    position: absolute;
+    top: 12px;
+    right: 16px;
+}
+
+/* Edit toggle button styling */
+.edit-toggle-btn {
+    float: right;
+    margin-left: 12px;
+    background: #ed6f2d;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    transition: background 0.2s, color 0.2s;
+}
+.edit-toggle-btn.editing {
+    background: #334155;
+    color: #ed6f2d;
+}
 /* New language button styled like Light Mode button */
 .lang-mode-btn {
     position: relative;
