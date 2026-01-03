@@ -398,6 +398,10 @@ function getKanAscRequired(fromLevel, toLevel) {
     return Math.round(totalKan);
 }
 
+// NOTE: removed a previous blanket wheel-prevent listener so hover-wheel can work again.
+// The actual wheel behavior is handled below with more nuanced logic (allow hover-wheel
+// value changes while preventing unwanted page scrolls).
+
 function getKanExpRequired(fromLevel, toLevel) {
     const milestones = [1, 20, 30, 40, 50, 60, 70, 80, 90, 100];
     let totalKan = 0;
@@ -1890,6 +1894,9 @@ function updateSkillFarmingSection() {
 
 // Helper to force show the farming panel and scroll it into view
 function showFarmingSection() {
+    // One-time auto-open flag: when the farming panel is revealed for the first time
+    // we will scroll it into view. Subsequent updates will not re-scroll or force-open.
+    if (typeof window._skillFarmingAutoOpened === 'undefined') window._skillFarmingAutoOpened = false;
     const farmingSection = document.getElementById('skill-farming-section');
     const skillResults = document.getElementById('skill-results');
     // The farming panel lives inside #skill-results, which defaults to display:none unless
@@ -1919,11 +1926,13 @@ function showFarmingSection() {
         }
         parent = parent.parentElement;
     }
-    // Scroll into view when triggered by passive/omamori changes
-    // Smooth scroll to the panel; retry on next frame to handle layout shifts
-    const scrollToPanel = () => farmingSection.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-    scrollToPanel();
-    requestAnimationFrame(scrollToPanel);
+    // Scroll into view when triggered by passive/omamori changes — but only the first time.
+    if (!window._skillFarmingAutoOpened) {
+        const scrollToPanel = () => farmingSection.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+        scrollToPanel();
+        requestAnimationFrame(scrollToPanel);
+        window._skillFarmingAutoOpened = true;
+    }
 }
 
 // Expose helpers for inline handlers
@@ -2174,47 +2183,54 @@ function initWeaponUI() {
 }
 
 // Enable mouse wheel scrolling on number inputs with real-time updates
+// Only apply the wheel-driven value change if the control is focused. This prevents
+// hover-wheel from causing value changes which in the Skills tab triggered
+// panels to open and auto-scroll into view.
 document.addEventListener('wheel', (e) => {
-    if (e.target.type === 'number') {
+    const tgt = e.target;
+    // Number inputs: only change value if input is focused
+    if (tgt && tgt.type === 'number') {
+        const input = tgt;
+        // Allow hover-wheel to change number inputs (restore pre-existing UX).
         e.preventDefault();
-        const input = e.target;
         const step = parseFloat(input.step) || 1;
         const currentValue = parseFloat(input.value) || 0;
-        const minValue = parseFloat(input.min) !== null && input.min !== '' ? parseFloat(input.min) : -Infinity;
-        const maxValue = parseFloat(input.max) !== null && input.max !== '' ? parseFloat(input.max) : Infinity;
-        
+        const minValue = (input.min !== undefined && input.min !== '') ? parseFloat(input.min) : -Infinity;
+        const maxValue = (input.max !== undefined && input.max !== '') ? parseFloat(input.max) : Infinity;
+
         if (e.deltaY < 0) {
-            // Scroll up - increase
             const newValue = currentValue + step;
             input.value = Math.min(maxValue, Math.max(minValue, newValue));
         } else {
-            // Scroll down - decrease
             const newValue = currentValue - step;
             input.value = Math.max(minValue, Math.min(maxValue, newValue));
         }
-        
+
         // Trigger change event for real-time updates
         input.dispatchEvent(new Event('change', { bubbles: true }));
+        return;
     }
-    // Enable mouse wheel scrolling on level select dropdowns (Character, Weapon, and Skills tabs)
-    else if (e.target.tagName === 'SELECT' && 
-             (e.target.id === 'char-current-level' || e.target.id === 'char-target-level' ||
-              e.target.id === 'weapon-current-level' || e.target.id === 'weapon-target-level' ||
-              e.target.id === 'skill-current-level' || e.target.id === 'skill-target-level')) {
-        e.preventDefault();
-        const select = e.target;
-        const currentIndex = select.selectedIndex;
-        
-        if (e.deltaY < 0 && currentIndex < select.options.length - 1) {
-            // Scroll up - increase level
-            select.selectedIndex = currentIndex + 1;
-        } else if (e.deltaY > 0 && currentIndex > 0) {
-            // Scroll down - decrease level
-            select.selectedIndex = currentIndex - 1;
+
+    // Select dropdowns: allow hover-wheel for any "Current Level" or "Target Level" selects
+    if (tgt && tgt.tagName === 'SELECT') {
+        const select = tgt;
+        const id = (select.id || '').toLowerCase();
+        const isLevelSelect = /-(current|target)-level$/.test(id);
+        if (isLevelSelect) {
+            e.preventDefault();
+            const currentIndex = select.selectedIndex;
+
+            if (e.deltaY < 0 && currentIndex < select.options.length - 1) {
+                select.selectedIndex = currentIndex + 1;
+            } else if (e.deltaY > 0 && currentIndex > 0) {
+                select.selectedIndex = currentIndex - 1;
+            }
+
+            // Trigger change event for real-time updates
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+            return;
         }
-        
-        // Trigger change event for real-time updates
-        select.dispatchEvent(new Event('change', { bubbles: true }));
+        // Otherwise fall through (no action)
     }
 }, { passive: false });
 
