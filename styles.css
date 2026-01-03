@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600&display=swap');
 
+/* Default UI scale: set root font-size to 80% so the layout scales
+     proportionally and remains responsive. Remove if you prefer
+     browser default zoom behavior. */
+html { font-size: 80%; }
+
 /* Disabled tile visual: use an overlay so specific elements can remain sharp and clickable */
 .tile.disabled {
     position: relative;

@@ -1,6 +1,6 @@
 // Custom language dropdown with SVG flags
 const LANGUAGES = [
-  { code: 'en', name: 'English', flag: 'flags/us.svg' },
+  { code: 'en', name: 'English', flag: 'flags/gb.svg' },
   { code: 'fr', name: 'Français', flag: 'flags/fr.svg' },
   { code: 'es', name: 'Español', flag: 'flags/es.svg' }
 ];
