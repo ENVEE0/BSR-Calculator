@@ -1699,6 +1699,7 @@ function calculateSkill() {
         DOMHelpers.setText('skill-purple-art', '0');
         DOMHelpers.setText('skill-kans', '0');
         if (results) results.classList.remove('show');
+        updateSkillFarmingSection();
         return;
     }
 
@@ -1708,9 +1709,9 @@ function calculateSkill() {
         DOMHelpers.setText('skill-purple-art', '0');
         DOMHelpers.setText('skill-kans', '0');
         if (results) results.classList.add('show');
+        updateSkillFarmingSection();
         return;
     }
-
     const skillRequirements = getSkillRequirements();
     let totalGreen = 0, totalBlue = 0, totalPurple = 0, totalKans = 0;
 
@@ -1733,49 +1734,123 @@ function calculateSkill() {
 
     if (results) results.classList.add('show');
     
-    // Calculate farming runs for arts with conversions applied
-    const farmingSection = document.getElementById('skill-farming-section');
-    
-    if (targetLevel > currentLevel && selectedTypes.length > 0 && farmingSection) {
-        // Calculate arts by color needed vs owned
-        // For upgrades: convert lower colors to higher colors to minimize farming
-        let purpleDeficit = Math.max(0, totalPurple - purpleArtOwned);
-        let blueDeficit = Math.max(0, totalBlue - blueArtOwned);
-        let greenDeficit = Math.max(0, totalGreen - greenArtOwned);
-        
-        // Track excess of each color
-        // Use net purple-equivalent (needed - owned); surplus greens/blues reduce purple deficit
-        const neededEquivalent = (totalGreen / 9) + (totalBlue / 3) + totalPurple;
-        const ownedEquivalent = (greenArtOwned / 9) + (blueArtOwned / 3) + purpleArtOwned;
-        const purpleEquivalentNeeded = Math.max(0, neededEquivalent - ownedEquivalent);
+    // Update farming section (includes both active skills and passives)
+    updateSkillFarmingSection();
+}
 
-        let bestArtLevel = 6;
+function getTotalPassiveOmamori() {
+    let total = 0;
+    
+    // Sum up omamori from all three passives
+    for (let i = 1; i <= 3; i++) {
+        const omamoriElement = document.getElementById(`passive${i}-omamori`);
+        if (omamoriElement) {
+            const value = parseInt(omamoriElement.textContent) || 0;
+            total += value;
+        }
+    }
+    
+    return total;
+}
+
+function updateSkillFarmingSection() {
+    // This function updates the farming section to reflect both active skills and passives
+    const farmingSection = document.getElementById('skill-farming-section');
+    if (!farmingSection) return;
+    showFarmingSection();
+    
+    const currentLevel = parseInt(document.getElementById('skill-current-level').value);
+    const targetLevel = parseInt(document.getElementById('skill-target-level').value);
+    const selectedTypes = Array.from(document.querySelectorAll('.skill-checkbox:checked')).map(cb => cb.value);
+    const omamoriOwned = parseFloat(document.getElementById('passive-omamori-owned')?.value) || 0;
+    
+    // Check if there are any active skill upgrades or passive upgrades
+    const hasSkillUpgrades = (targetLevel > currentLevel && selectedTypes.length > 0);
+    const totalPassiveOmamori = getTotalPassiveOmamori();
+    const hasPassiveUpgrades = totalPassiveOmamori > 0;
+    const hasOmamoriInput = omamoriOwned > 0;
+
+    // Detect if any passive target level is above current (so the panel should open even if owned covers the need)
+    const passiveTargets = [1, 2, 3].map(i => ({
+        current: parseInt(document.getElementById(`passive${i}-current-level`)?.value || '0'),
+        target: parseInt(document.getElementById(`passive${i}-target-level`)?.value || '0'),
+        enabled: i !== 3 || document.getElementById('passive3-toggle')?.checked !== false
+    }));
+    const hasPassiveTargets = passiveTargets.some(p => p.enabled && p.target > p.current);
+    
+    if (hasSkillUpgrades || hasPassiveUpgrades || hasOmamoriInput || hasPassiveTargets) {
+        // Art calculation (from active skills)
         let bestArtRuns = 0;
+        let bestArtLevel = 6;
+        let artStamina = 0;
         
-        if (purpleEquivalentNeeded > 0) {
-            let bestArtRunsTemp = Infinity;
-            for (let level = 1; level <= 6; level++) {
-                const rewards = settings.farmingRewards.art[level];
-                const purpleEquivalentFromRewards = rewards.purple + (rewards.blue / 3) + (rewards.green / 9);
-                
-                if (purpleEquivalentFromRewards > 0) {
-                    const runsNeeded = Math.ceil(purpleEquivalentNeeded / purpleEquivalentFromRewards);
-                    if (runsNeeded < bestArtRunsTemp || (runsNeeded === bestArtRunsTemp && level > bestArtLevel)) {
-                        bestArtRunsTemp = runsNeeded;
-                        bestArtLevel = level;
+        if (hasSkillUpgrades) {
+            const greenArtOwned = parseFloat(document.getElementById('skill-green-art-owned').value) || 0;
+            const blueArtOwned = parseFloat(document.getElementById('skill-blue-art-owned').value) || 0;
+            const purpleArtOwned = parseFloat(document.getElementById('skill-purple-art-owned').value) || 0;
+            
+            const skillRequirements = getSkillRequirements();
+            let totalGreen = 0, totalBlue = 0, totalPurple = 0;
+            
+            for (let level = currentLevel + 1; level <= targetLevel; level++) {
+                const req = skillRequirements[level];
+                totalGreen += req.greenArt * selectedTypes.length;
+                totalBlue += req.blueArt * selectedTypes.length;
+                totalPurple += req.purpleArt * selectedTypes.length;
+            }
+            
+            const neededEquivalent = (totalGreen / 9) + (totalBlue / 3) + totalPurple;
+            const ownedEquivalent = (greenArtOwned / 9) + (blueArtOwned / 3) + purpleArtOwned;
+            const purpleEquivalentNeeded = Math.max(0, neededEquivalent - ownedEquivalent);
+            
+            if (purpleEquivalentNeeded > 0) {
+                let bestArtRunsTemp = Infinity;
+                for (let level = 1; level <= 6; level++) {
+                    const rewards = settings.farmingRewards.art[level];
+                    const purpleEquivalentFromRewards = rewards.purple + (rewards.blue / 3) + (rewards.green / 9);
+                    
+                    if (purpleEquivalentFromRewards > 0) {
+                        const runsNeeded = Math.ceil(purpleEquivalentNeeded / purpleEquivalentFromRewards);
+                        if (runsNeeded < bestArtRunsTemp || (runsNeeded === bestArtRunsTemp && level > bestArtLevel)) {
+                            bestArtRunsTemp = runsNeeded;
+                            bestArtLevel = level;
+                        }
                     }
                 }
+                bestArtRuns = (bestArtRunsTemp === Infinity) ? 0 : bestArtRunsTemp;
             }
-            bestArtRuns = (bestArtRunsTemp === Infinity) ? 0 : bestArtRunsTemp;
+            
+            artStamina = bestArtRuns > 0 ? bestArtRuns * settings.farmingRewards.art[bestArtLevel].stamina : 0;
         }
         
-        // For omamori, calculate based on passives (non-convertible)
-        // For now, we'll show 0 omamori runs since we're only dealing with active skills
-        let bestOmamoriLevel = 6;
+        // Omamori calculation (from passives)
         let bestOmamoriRuns = 0;
-        const omamoriStamina = 0;
+        let bestOmamoriLevel = 6;
+        let omamoriStamina = 0;
         
-        const artStamina = bestArtRuns > 0 ? bestArtRuns * settings.farmingRewards.art[bestArtLevel].stamina : 0;
+        if (totalPassiveOmamori > 0) {
+            // Get owned omamori (single purple tier)
+            const omamoriNeeded = Math.max(0, totalPassiveOmamori - omamoriOwned);
+            
+            if (omamoriNeeded > 0) {
+                let bestOmamoriRunsTemp = Infinity;
+                for (let level = 1; level <= 6; level++) {
+                    const rewards = settings.farmingRewards.omamori[level];
+                    const omamoriPerRun = rewards.yellow;
+                    
+                    if (omamoriPerRun > 0) {
+                        const runsNeeded = Math.ceil(omamoriNeeded / omamoriPerRun);
+                        if (runsNeeded < bestOmamoriRunsTemp || (runsNeeded === bestOmamoriRunsTemp && level > bestOmamoriLevel)) {
+                            bestOmamoriRunsTemp = runsNeeded;
+                            bestOmamoriLevel = level;
+                        }
+                    }
+                }
+                bestOmamoriRuns = (bestOmamoriRunsTemp === Infinity) ? 0 : bestOmamoriRunsTemp;
+            }
+            omamoriStamina = bestOmamoriRuns > 0 ? bestOmamoriRuns * settings.farmingRewards.omamori[bestOmamoriLevel].stamina : 0;
+        }
+        
         const totalStamina = artStamina + omamoriStamina;
         
         // Update labels with recommended levels
@@ -1796,10 +1871,58 @@ function calculateSkill() {
         DOMHelpers.setText('skill-omamori-stamina', `(${omamoriStamina} stamina)`);
         DOMHelpers.setText('skill-total-stamina', totalStamina);
         
-        farmingSection.style.display = 'block';
-    } else {
-        if (farmingSection) farmingSection.style.display = 'none';
+        // panel is always visible; nothing to hide here
     }
+
+    // Safety: ensure the panel stays visible even if upstream styles interfere
+    showFarmingSection();
+}
+
+// Helper to force show the farming panel and scroll it into view
+function showFarmingSection() {
+    const farmingSection = document.getElementById('skill-farming-section');
+    const skillResults = document.getElementById('skill-results');
+    // The farming panel lives inside #skill-results, which defaults to display:none unless
+    // the "show" class is present. Passive-only flows can hide it (e.g., when skill target
+    // equals current), so force it visible whenever we reveal the farming panel.
+    if (skillResults) {
+        skillResults.classList.add('show');
+    }
+    if (!farmingSection) return;
+    farmingSection.removeAttribute('hidden');
+    farmingSection.hidden = false;
+    farmingSection.classList.remove('hidden', 'collapse', 'collapsed');
+    farmingSection.style.setProperty('display', 'block', 'important');
+    farmingSection.style.visibility = 'visible';
+    farmingSection.style.opacity = '1';
+    farmingSection.style.height = 'auto';
+    farmingSection.style.maxHeight = 'none';
+    farmingSection.style.overflow = 'visible';
+    farmingSection.ariaHidden = 'false';
+    // Unhide any hidden ancestors (tab containers)
+    let parent = farmingSection.parentElement;
+    while (parent && parent !== document.body) {
+        if (parent.hasAttribute('hidden')) parent.removeAttribute('hidden');
+        parent.hidden = false;
+        if (parent.style && parent.style.display === 'none') {
+            parent.style.setProperty('display', 'block', 'important');
+        }
+        parent = parent.parentElement;
+    }
+    // Scroll into view when triggered by passive/omamori changes
+    // Smooth scroll to the panel; retry on next frame to handle layout shifts
+    const scrollToPanel = () => farmingSection.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    scrollToPanel();
+    requestAnimationFrame(scrollToPanel);
+}
+
+// Expose helpers for inline handlers
+window.showFarmingSection = showFarmingSection;
+window.updatePassivesFarmingSection = updatePassivesFarmingSection;
+
+// Wrapper to clarify intent when farming updates are driven by passive inputs
+function updatePassivesFarmingSection() {
+    updateSkillFarmingSection();
 }
 
 function calculatePassive(passiveNum) {
@@ -1809,6 +1932,8 @@ function calculatePassive(passiveNum) {
     if (targetLevel <= currentLevel) {
         DOMHelpers.setText(`passive${passiveNum}-omamori`, '0');
         DOMHelpers.setText(`passive${passiveNum}-kans`, '0');
+        updatePassivesFarmingSection();
+        showFarmingSection();
         return;
     }
 
@@ -1823,6 +1948,8 @@ function calculatePassive(passiveNum) {
 
     DOMHelpers.setText(`passive${passiveNum}-omamori`, totalOmamori);
     DOMHelpers.setText(`passive${passiveNum}-kans`, totalKans.toLocaleString());
+    updatePassivesFarmingSection();
+    showFarmingSection();
 }
 
 // Generic toggle conversion function for all tabs
@@ -1883,6 +2010,8 @@ function initSkillsUI() {
     calculatePassive(1);
     calculatePassive(2);
     calculatePassive(3);
+    updateSkillFarmingSection();
+    showFarmingSection();
 }
 
 function togglePassive3Warning() {
@@ -1910,6 +2039,11 @@ function handleSkillArtInput(e) {
     else if (['skill-green-art-owned', 'skill-blue-art-owned', 'skill-purple-art-owned'].includes(e.target.id)) {
         calculateSkill();
     }
+    // Handle omamori owned input (update immediately on typing)
+    else if (e.target.id === 'passive-omamori-owned') {
+        updatePassivesFarmingSection();
+        showFarmingSection();
+    }
 }
 
 function handleSkillArtChange(e) {
@@ -1926,6 +2060,11 @@ function handleSkillArtChange(e) {
     else if (['skill-green-art-owned', 'skill-blue-art-owned', 'skill-purple-art-owned'].includes(e.target.id)) {
         calculateSkill();
     }
+    // Handle omamori owned input
+    else if (e.target.id === 'passive-omamori-owned') {
+        updatePassivesFarmingSection();
+        showFarmingSection();
+    }
     // Handle skill type checkboxes
     else if (['skill-type-basic', 'skill-type-technique', 'skill-type-counter', 'skill-type-ultimate'].includes(e.target.id)) {
         calculateSkill();
@@ -1933,17 +2072,21 @@ function handleSkillArtChange(e) {
     // Handle passive level changes
     else if (e.target.id === 'passive1-current-level' || e.target.id === 'passive1-target-level') {
         calculatePassive(1);
+        showFarmingSection();
     }
     else if (e.target.id === 'passive2-current-level' || e.target.id === 'passive2-target-level') {
         calculatePassive(2);
+        showFarmingSection();
     }
     else if (e.target.id === 'passive3-current-level' || e.target.id === 'passive3-target-level') {
         if (document.getElementById('passive3-toggle').checked) {
             calculatePassive(3);
+            showFarmingSection();
         }
     }
     else if (e.target.id === 'passive3-toggle') {
         handlePassive3Toggle(e.target);
+        showFarmingSection();
     }
 }
 
@@ -1967,6 +2110,7 @@ function handlePassive3Toggle(toggle) {
     if (!isEnabled) {
         document.getElementById('passive3-omamori').textContent = '0';
         document.getElementById('passive3-kans').textContent = '0';
+        updateSkillFarmingSection();
     } else {
         calculatePassive(3);
     }

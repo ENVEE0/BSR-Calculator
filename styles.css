@@ -98,6 +98,14 @@ h1 {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
+#skill-farming-section {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    max-height: none !important;
+}
+
 .subtitle {
     font-size: 1.2em;
     opacity: 0.9;
@@ -329,6 +337,11 @@ button.calculate:hover {
     padding: 20px;
     border-radius: 8px;
     border: 2px solid rgba(200, 100, 0, 0.3);
+}
+
+.tile-omamori {
+    background: rgba(168, 85, 247, 0.12);
+    border-color: rgba(168, 85, 247, 0.35);
 }
 
 .tile-title {

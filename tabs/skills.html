@@ -123,7 +123,7 @@
     </div>
     
     <!-- Farming Calculator Section -->
-    <div id="skill-farming-section" style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, rgba(237, 111, 45, 0.15), rgba(156, 39, 176, 0.15)); border-radius: 12px; border: 2px solid rgba(237, 111, 45, 0.4); display: none;">
+    <div id="skill-farming-section" style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, rgba(237, 111, 45, 0.15), rgba(156, 39, 176, 0.15)); border-radius: 12px; border: 2px solid rgba(237, 111, 45, 0.4);">
         <h3 style="margin: 0 0 20px 0; text-align: center; color: var(--result-value); font-size: 1.2em;" data-i18n="farming.title">Material Farming Runs Needed</h3>
         <div style="display: flex; flex-direction: column; gap: 15px;">
             <div class="result-item" style="background: rgba(237, 111, 45, 0.1); padding: 15px; border-radius: 8px;">
@@ -148,6 +148,18 @@
 
 <div style="margin-top: 40px;">
     <h2 style="margin: 0 0 20px 0; color: var(--result-value); text-align: center;" data-i18n="skill.passives">Passives</h2>
+    
+    <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 25px;">
+        <div class="input-group" style="margin-bottom: 0;">
+            <label data-i18n="skill.omamoriOwned">Omamori Owned:</label>
+            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <div class="colored-input colored-input-purple">
+                    <span style="color: #a855f7;">●</span>
+                    <input type="number" id="passive-omamori-owned" min="0" value="0" placeholder="0">
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px;">
         <!-- Passive Boost 1 Calculator -->
@@ -268,6 +280,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <style>
