@@ -15,9 +15,6 @@
     "skills": "Habilidades",
     "dashboard": "Panel de Control"
   },
-  "footer": {
-    "wip": "Trabajo en progreso (No tenemos todos los números y puede haber errores)"
-  },
   "login": {
     "title": "Acceso al Panel de Control",
     "description": "Este panel de control es solo para usuarios autorizados.",
@@ -152,5 +149,15 @@
     "en": "English",
     "fr": "Français",
     "es": "Español"
+  },
+  "farming": {
+    "title": "Misiones de Farmeo Necesarias",
+    "essenceRuns": "Misiones de Esencia (Niv.6):",
+    "bookRuns": "Misiones de Libro (Niv.6):",
+    "tamahaganeRuns": "Misiones de Tamahagane (Niv.6):",
+    "hammerRuns": "Misiones de Martillo (Niv.6):",
+    "artRuns": "Misiones de Arte (Niv.6):",
+    "omamoriRuns": "Misiones de Omamori (Niv.6):",
+    "totalStamina": "Resistencia Total:"
   }
 }

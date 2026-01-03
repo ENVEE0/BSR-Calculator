@@ -447,6 +447,13 @@ button.calculate:hover {
     align-items: center;
 }
 
+.grid-6col-input {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
 .grid-3col-input {
     display: grid;
     grid-template-columns: auto 1fr 1fr;

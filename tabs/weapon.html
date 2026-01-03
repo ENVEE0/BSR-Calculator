@@ -8,7 +8,9 @@
 <div class="input-group">
     <label data-i18n="weapon.currentLevel">Current Level</label>
     <select id="weapon-current-level">
-        <option value="20" selected>20</option>
+        <option value="1" selected>1</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
         <option value="30">30</option>
         <option value="40">40</option>
         <option value="50">50</option>
@@ -88,18 +90,18 @@
         <span data-i18n="weapon.materialConversion">Material Conversion (Hammers)</span>
     </h3>
     <div id="conversion-content-weapon" style="margin-top: 0; transition: all 0.3s ease; display: none;">
-        <div style="display: flex; flex-direction: column; gap: 10px; padding: 10px;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                <span style="padding: 8px 14px; background: rgba(156, 39, 176, 0.3); border-radius: 4px; border: 1.5px solid #9C27B0; font-weight: 700; color: #9C27B0; font-size: 1.1em;">1</span>
-                <span style="color: var(--result-value); font-size: 1.2em;">→</span>
-                <span style="padding: 8px 14px; background: rgba(33, 150, 243, 0.3); border-radius: 4px; border: 1.5px solid #2196F3; font-weight: 700; color: #2196F3; font-size: 1.1em;">3</span>
-                <span style="color: var(--result-value); margin: 0 5px; font-size: 0.9em;">or</span>
-                <span style="padding: 8px 14px; background: rgba(76, 175, 80, 0.3); border-radius: 4px; border: 1.5px solid #4CAF50; font-weight: 700; color: #4CAF50; font-size: 1.1em;">9</span>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 15px;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px; background: rgba(156, 39, 176, 0.1); border-radius: 8px;">
+                <span style="padding: 8px 14px; background: rgba(33, 150, 243, 0.4); border-radius: 4px; border: 1.5px solid #2196F3; font-weight: 700; color: #2196F3; font-size: 1.1em;">3</span>
+                <span style="color: var(--result-value); font-size: 1.3em; font-weight: 700;">⇄</span>
+                <span style="padding: 8px 14px; background: rgba(156, 39, 176, 0.4); border-radius: 4px; border: 1.5px solid #9C27B0; font-weight: 700; color: #9C27B0; font-size: 1.1em;">1</span>
+                <span style="color: var(--result-value); font-size: 1.3em; font-weight: 700;">⇄</span>
+                <span style="padding: 8px 14px; background: rgba(76, 175, 80, 0.4); border-radius: 4px; border: 1.5px solid #4CAF50; font-weight: 700; color: #4CAF50; font-size: 1.1em;">9</span>
             </div>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                <span style="padding: 8px 14px; background: rgba(33, 150, 243, 0.3); border-radius: 4px; border: 1.5px solid #2196F3; font-weight: 700; color: #2196F3; font-size: 1.1em;">1</span>
-                <span style="color: var(--result-value); font-size: 1.2em;">→</span>
-                <span style="padding: 8px 14px; background: rgba(76, 175, 80, 0.3); border-radius: 4px; border: 1.5px solid #4CAF50; font-weight: 700; color: #4CAF50; font-size: 1.1em;">3</span>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px; background: rgba(33, 150, 243, 0.1); border-radius: 8px;">
+                <span style="padding: 8px 14px; background: rgba(76, 175, 80, 0.4); border-radius: 4px; border: 1.5px solid #4CAF50; font-weight: 700; color: #4CAF50; font-size: 1.1em;">3</span>
+                <span style="color: var(--result-value); font-size: 1.3em; font-weight: 700;">⇄</span>
+                <span style="padding: 8px 14px; background: rgba(33, 150, 243, 0.4); border-radius: 4px; border: 1.5px solid #2196F3; font-weight: 700; color: #2196F3; font-size: 1.1em;">1</span>
             </div>
         </div>
     </div>
@@ -174,6 +176,27 @@
             <div class="result-item colored-result colored-result-purple">
                 <span class="result-label" data-i18n="weapon.purpleHammers">Purple Hammers:</span>
                 <span class="result-value" id="weapon-hammers-purple">0</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Farming Calculator Section -->
+    <div id="weapon-farming-section" style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, rgba(255, 152, 0, 0.15), rgba(158, 158, 158, 0.15)); border-radius: 12px; border: 2px solid rgba(255, 152, 0, 0.4); display: none;">
+        <h3 style="margin: 0 0 20px 0; text-align: center; color: var(--result-value); font-size: 1.2em;" data-i18n="farming.title">Material Farming Runs Needed</h3>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div class="result-item" style="background: rgba(255, 152, 0, 0.1); padding: 15px; border-radius: 8px;">
+                <span class="result-label" data-i18n="farming.tamahaganeRuns">Tamahagane Runs (Lv.6):</span>
+                <span class="result-value" id="weapon-tamahagane-runs">0</span>
+                <span style="color: var(--text-secondary); font-size: 0.9em; margin-left: 10px;" id="weapon-tamahagane-stamina">(0 stamina)</span>
+            </div>
+            <div class="result-item" style="background: rgba(158, 158, 158, 0.1); padding: 15px; border-radius: 8px;">
+                <span class="result-label" data-i18n="farming.hammerRuns">Hammer Runs (Lv.6):</span>
+                <span class="result-value" id="weapon-hammer-runs">0</span>
+                <span style="color: var(--text-secondary); font-size: 0.9em; margin-left: 10px;" id="weapon-hammer-stamina">(0 stamina)</span>
+            </div>
+            <div class="result-item" style="background: rgba(33, 150, 243, 0.2); padding: 15px; border-radius: 8px; font-weight: bold;">
+                <span class="result-label" data-i18n="farming.totalStamina">Total Stamina:</span>
+                <span class="result-value" id="weapon-total-stamina">0</span>
             </div>
         </div>
     </div>

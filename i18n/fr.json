@@ -15,9 +15,6 @@
     "skills": "Compétences",
     "dashboard": "Tableau de Bord"
   },
-  "footer": {
-    "wip": "Travail en cours (Nous n'avons pas tous les chiffres et il peut y avoir des erreurs)"
-  },
   "login": {
     "title": "Accès au Tableau de Bord",
     "description": "Ce tableau de bord est réservé aux utilisateurs autorisés uniquement.",
@@ -152,5 +149,15 @@
     "en": "English",
     "fr": "Français",
     "es": "Español"
+  },
+  "farming": {
+    "title": "Missions de Farming Nécessaires",
+    "essenceRuns": "Missions Essence (Niv.6) :",
+    "bookRuns": "Missions Livre (Niv.6) :",
+    "tamahaganeRuns": "Missions Tamahagane (Niv.6) :",
+    "hammerRuns": "Missions Marteau (Niv.6) :",
+    "artRuns": "Missions Art (Niv.6) :",
+    "omamoriRuns": "Missions Omamori (Niv.6) :",
+    "totalStamina": "Endurance Totale :"
   }
 }

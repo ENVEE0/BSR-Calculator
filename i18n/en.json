@@ -15,9 +15,6 @@
     "skills": "Skills",
     "dashboard": "Dashboard"
   },
-  "footer": {
-    "wip": "Work in progress (We don't have all the numbers and there can be errors)"
-  },
   "login": {
     "title": "Dashboard Access",
     "description": "This dashboard is restricted to authorized users only.",
@@ -152,5 +149,15 @@
     "en": "English",
     "fr": "Français",
     "es": "Español"
+  },
+  "farming": {
+    "title": "Material Farming Runs Needed",
+    "essenceRuns": "Essence Runs (Lv.6):",
+    "bookRuns": "Book Runs (Lv.6):",
+    "tamahaganeRuns": "Tamahagane Runs (Lv.6):",
+    "hammerRuns": "Hammer Runs (Lv.6):",
+    "artRuns": "Art Runs (Lv.6):",
+    "omamoriRuns": "Omamori Runs (Lv.6):",
+    "totalStamina": "Total Stamina:"
   }
 }
