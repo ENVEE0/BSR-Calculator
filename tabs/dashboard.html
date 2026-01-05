@@ -41,125 +41,112 @@
         </div>
 
         <div class="tile disabled">
-            <div class="tile-title" data-i18n="dashboard.essencesRequired">Essences Required (per bracket)</div>
-                        <button class="edit-toggle-btn" type="button" onclick="toggleTileEdit(this)">Edit</button>
-            <div class="grid-4col-input">
+            <div class="tile-title">Level bracket materials & ascension Kans</div>
+            <button class="edit-toggle-btn" type="button" onclick="toggleTileEdit(this)">Edit</button>
+            <div class="grid-5col-input">
                 <div class="grid-header" data-i18n="dashboard.level">Level</div>
                 <div class="grid-header" data-i18n="dashboard.green">Green</div>
                 <div class="grid-header" data-i18n="dashboard.blue">Blue</div>
                 <div class="grid-header" data-i18n="dashboard.purple">Purple</div>
-                
+                <div class="grid-header">Kans</div>
+
                 <div>20-30</div>
-                <input type="number" id="dash-essence-20-30-green" min="0" step="1" value="0" disabled>
-                <input type="number" id="dash-essence-20-30-blue" min="0" step="1" value="6" disabled>
-                <input type="number" id="dash-essence-20-30-purple" min="0" step="1" value="0" disabled>
-                
+                <input type="number" id="dash-bracket-20-30-green" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-20-30-blue" min="0" step="1" value="6" disabled>
+                <input type="number" id="dash-bracket-20-30-purple" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-20-30-kans" min="0" step="1" value="2500" disabled>
+
                 <div>30-40</div>
-                <input type="number" id="dash-essence-30-40-green" min="0" step="1" value="0" disabled>
-                <input type="number" id="dash-essence-30-40-blue" min="0" step="1" value="12" disabled>
-                <input type="number" id="dash-essence-30-40-purple" min="0" step="1" value="0" disabled>
-                
+                <input type="number" id="dash-bracket-30-40-green" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-30-40-blue" min="0" step="1" value="12" disabled>
+                <input type="number" id="dash-bracket-30-40-purple" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-30-40-kans" min="0" step="1" value="5000" disabled>
+
                 <div>40-50</div>
-                <input type="number" id="dash-essence-40-50-green" min="0" step="1" value="6" disabled>
-                <input type="number" id="dash-essence-40-50-blue" min="0" step="1" value="0" disabled>
-                <input type="number" id="dash-essence-40-50-purple" min="0" step="1" value="0" disabled>
-                
+                <input type="number" id="dash-bracket-40-50-green" min="0" step="1" value="6" disabled>
+                <input type="number" id="dash-bracket-40-50-blue" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-40-50-purple" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-40-50-kans" min="0" step="1" value="10000" disabled>
+
                 <div>50-60</div>
-                <input type="number" id="dash-essence-50-60-green" min="0" step="1" value="10" disabled>
-                <input type="number" id="dash-essence-50-60-blue" min="0" step="1" value="0" disabled>
-                <input type="number" id="dash-essence-50-60-purple" min="0" step="1" value="0" disabled>
-                
+                <input type="number" id="dash-bracket-50-60-green" min="0" step="1" value="10" disabled>
+                <input type="number" id="dash-bracket-50-60-blue" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-50-60-purple" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-50-60-kans" min="0" step="1" value="15000" disabled>
+
                 <div>60-70</div>
-                <input type="number" id="dash-essence-60-70-green" min="0" step="1" value="14" disabled>
-                <input type="number" id="dash-essence-60-70-blue" min="0" step="1" value="0" disabled>
-                <input type="number" id="dash-essence-60-70-purple" min="0" step="1" value="0" disabled>
-                
+                <input type="number" id="dash-bracket-60-70-green" min="0" step="1" value="14" disabled>
+                <input type="number" id="dash-bracket-60-70-blue" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-60-70-purple" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-60-70-kans" min="0" step="1" value="20000" disabled>
+
                 <div>70-80</div>
-                <input type="number" id="dash-essence-70-80-green" min="0" step="1" value="0" disabled>
-                <input type="number" id="dash-essence-70-80-blue" min="0" step="1" value="0" disabled>
-                <input type="number" id="dash-essence-70-80-purple" min="0" step="1" value="6" disabled>
-                
+                <input type="number" id="dash-bracket-70-80-green" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-70-80-blue" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-70-80-purple" min="0" step="1" value="6" disabled>
+                <input type="number" id="dash-bracket-70-80-kans" min="0" step="1" value="30000" disabled>
+
                 <div>80-90</div>
-                <input type="number" id="dash-essence-80-90-green" min="0" step="1" value="0" disabled>
-                <input type="number" id="dash-essence-80-90-blue" min="0" step="1" value="0" disabled>
-                <input type="number" id="dash-essence-80-90-purple" min="0" step="1" value="7" disabled>
-                
+                <input type="number" id="dash-bracket-80-90-green" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-80-90-blue" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-80-90-purple" min="0" step="1" value="7" disabled>
+                <input type="number" id="dash-bracket-80-90-kans" min="0" step="1" value="40000" disabled>
+
                 <div>90-100</div>
-                <input type="number" id="dash-essence-90-100-green" min="0" step="1" value="0" disabled>
-                <input type="number" id="dash-essence-90-100-blue" min="0" step="1" value="0" disabled>
-                <input type="number" id="dash-essence-90-100-purple" min="0" step="1" value="8" disabled>
+                <input type="number" id="dash-bracket-90-100-green" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-90-100-blue" min="0" step="1" value="0" disabled>
+                <input type="number" id="dash-bracket-90-100-purple" min="0" step="1" value="8" disabled>
+                <input type="number" id="dash-bracket-90-100-kans" min="0" step="1" value="50000" disabled>
             </div>
         </div>
 
         <div class="tile disabled">
-            <div class="tile-title" data-i18n="dashboard.characterLevelKansCosts">Character level Kans Costs (per bracket)</div>
+            <div class="tile-title" data-i18n="dashboard.characterLevelKansCosts">Character level EXP & Kans per bracket</div>
                         <button class="edit-toggle-btn" type="button" onclick="toggleTileEdit(this)">Edit</button>
-            <div class="grid-2col-input">
+            <div class="grid-3col-input">
                 <div class="grid-header" data-i18n="dashboard.level">Level</div>
+                <div class="grid-header">EXP cost</div>
                 <div class="grid-header" data-i18n="dashboard.kans">Kans</div>
+
                 <div>1-20</div>
+                <input type="text" id="dash-exp-1-20" value="0" disabled>
                 <input type="number" id="dash-char-kans-1-20" min="0" step="1" value="7500" disabled>
-                
+
                 <div>20-30</div>
+                <input type="text" id="dash-exp-20-30" value="0" disabled>
                 <input type="number" id="dash-char-kans-20-30" min="0" step="1" value="12900" disabled>
-                
+
                 <div>30-40</div>
+                <input type="text" id="dash-exp-30-40" value="0" disabled>
                 <input type="number" id="dash-char-kans-30-40" min="0" step="1" value="23800" disabled>
-                
+
                 <div>40-50</div>
+                <input type="text" id="dash-exp-40-50" value="0" disabled>
                 <input type="number" id="dash-char-kans-40-50" min="0" step="1" value="41200" disabled>
-                
+
                 <div>50-60</div>
+                <input type="text" id="dash-exp-50-60" value="0" disabled>
                 <input type="number" id="dash-char-kans-50-60" min="0" step="1" value="66700" disabled>
-                
+
                 <div>60-70</div>
+                <input type="text" id="dash-exp-60-70" value="0" disabled>
                 <input type="number" id="dash-char-kans-60-70" min="0" step="1" value="101300" disabled>
-                
+
                 <div>70-80</div>
+                <input type="text" id="dash-exp-70-80" value="0" disabled>
                 <input type="number" id="dash-char-kans-70-80" min="0" step="1" value="145100" disabled>
-                
+
                 <div>80-90</div>
+                <input type="text" id="dash-exp-80-90" value="0" disabled>
                 <input type="number" id="dash-char-kans-80-90" min="0" step="1" value="193300" disabled>
-                
+
                 <div>90-100</div>
+                <input type="text" id="dash-exp-90-100" value="0" disabled>
                 <input type="number" id="dash-char-kans-90-100" min="0" step="1" value="239000" disabled>
             </div>
         </div>
 
-        <div class="tile disabled">
-            <div class="tile-title" data-i18n="dashboard.characterAscensionKansCosts">Character ascension Kans Costs (per bracket)</div>
-                        <button class="edit-toggle-btn" type="button" onclick="toggleTileEdit(this)">Edit</button>
-            <div class="grid-2col-input">
-                <div class="grid-header">Level</div>
-                <div class="grid-header">Kans</div>
-                <div>1-20</div>
-                <input type="number" id="dash-char-asc-kans-1-20" min="0" step="1" value="0" disabled>
-                
-                <div>20-30</div>
-                <input type="number" id="dash-char-asc-kans-20-30" min="0" step="1" value="2500" disabled>
-                
-                <div>30-40</div>
-                <input type="number" id="dash-char-asc-kans-30-40" min="0" step="1" value="5000" disabled>
-                
-                <div>40-50</div>
-                <input type="number" id="dash-char-asc-kans-40-50" min="0" step="1" value="10000" disabled>
-                
-                <div>50-60</div>
-                <input type="number" id="dash-char-asc-kans-50-60" min="0" step="1" value="15000" disabled>
-                
-                <div>60-70</div>
-                <input type="number" id="dash-char-asc-kans-60-70" min="0" step="1" value="20000" disabled>
-                
-                <div>70-80</div>
-                <input type="number" id="dash-char-asc-kans-70-80" min="0" step="1" value="30000" disabled>
-                
-                <div>80-90</div>
-                <input type="number" id="dash-char-asc-kans-80-90" min="0" step="1" value="40000" disabled>
-                
-                <div>90-100</div>
-                <input type="number" id="dash-char-asc-kans-90-100" min="0" step="1" value="50000" disabled>
-            </div>
-        </div>
+        <!-- Character ascension kans moved into merged bracket table above -->
     </div>
 </div>
 
@@ -191,119 +178,112 @@
         </div>
 
         <div class="tile disabled">
-            <div class="tile-title" data-i18n="dashboard.weaponHammers">Weapon Hammer Costs (per bracket)</div>
+            <div class="tile-title">Hammers Level bracket materials & ascension Kans</div>
                         <button class="edit-toggle-btn" type="button" onclick="toggleTileEdit(this)">Edit</button>
-            <div class="grid-4col-input">
+            <div class="grid-5col-input">
                 <div class="grid-header">Level</div>
-                <div class="grid-header">Green</div>
-                <div class="grid-header">Blue</div>
-                <div class="grid-header">Purple</div>
-                
+                <div class="grid-header">Green Hammer</div>
+                <div class="grid-header">Blue Hammer</div>
+                <div class="grid-header">Purple Hammer</div>
+                <div class="grid-header">kans cost</div>
+
                 <div>20-30</div>
                 <input type="number" id="dash-hammer-20-30-green" min="0" step="0.01" value="0" disabled>
                 <input type="number" id="dash-hammer-20-30-blue" min="0" step="0.01" value="6" disabled>
                 <input type="number" id="dash-hammer-20-30-purple" min="0" step="0.01" value="0" disabled>
-                
+                <input type="text" id="dash-hammer-20-30-kans" value="2500" disabled>
+
                 <div>30-40</div>
                 <input type="number" id="dash-hammer-30-40-green" min="0" step="0.01" value="0" disabled>
                 <input type="number" id="dash-hammer-30-40-blue" min="0" step="0.01" value="12" disabled>
                 <input type="number" id="dash-hammer-30-40-purple" min="0" step="0.01" value="0" disabled>
-                
+                <input type="text" id="dash-hammer-30-40-kans" value="5000" disabled>
+
                 <div>40-50</div>
                 <input type="number" id="dash-hammer-40-50-green" min="0" step="0.01" value="6" disabled>
                 <input type="number" id="dash-hammer-40-50-blue" min="0" step="0.01" value="0" disabled>
                 <input type="number" id="dash-hammer-40-50-purple" min="0" step="0.01" value="0" disabled>
-                
+                <input type="text" id="dash-hammer-40-50-kans" value="10000" disabled>
+
                 <div>50-60</div>
                 <input type="number" id="dash-hammer-50-60-green" min="0" step="0.01" value="10" disabled>
                 <input type="number" id="dash-hammer-50-60-blue" min="0" step="0.01" value="0" disabled>
                 <input type="number" id="dash-hammer-50-60-purple" min="0" step="0.01" value="0" disabled>
-                
+                <input type="text" id="dash-hammer-50-60-kans" value="15000" disabled>
+
                 <div>60-70</div>
                 <input type="number" id="dash-hammer-60-70-green" min="0" step="0.01" value="14" disabled>
                 <input type="number" id="dash-hammer-60-70-blue" min="0" step="0.01" value="0" disabled>
                 <input type="number" id="dash-hammer-60-70-purple" min="0" step="0.01" value="0" disabled>
-                
+                <input type="text" id="dash-hammer-60-70-kans" value="20000" disabled>
+
                 <div>70-80</div>
                 <input type="number" id="dash-hammer-70-80-green" min="0" step="0.01" value="0" disabled>
                 <input type="number" id="dash-hammer-70-80-blue" min="0" step="0.01" value="0" disabled>
                 <input type="number" id="dash-hammer-70-80-purple" min="0" step="0.01" value="6" disabled>
-                
+                <input type="text" id="dash-hammer-70-80-kans" value="30000" disabled>
+
                 <div>80-90</div>
                 <input type="number" id="dash-hammer-80-90-green" min="0" step="0.01" value="0" disabled>
                 <input type="number" id="dash-hammer-80-90-blue" min="0" step="0.01" value="0" disabled>
                 <input type="number" id="dash-hammer-80-90-purple" min="0" step="0.01" value="7" disabled>
-                
+                <input type="text" id="dash-hammer-80-90-kans" value="40000" disabled>
+
                 <div>90-100</div>
                 <input type="number" id="dash-hammer-90-100-green" min="0" step="0.01" value="0" disabled>
                 <input type="number" id="dash-hammer-90-100-blue" min="0" step="0.01" value="0" disabled>
                 <input type="number" id="dash-hammer-90-100-purple" min="0" step="0.01" value="8" disabled>
+                <input type="text" id="dash-hammer-90-100-kans" value="50000" disabled>
             </div>
         </div>
 
         <div class="tile disabled">
-            <div class="tile-title" data-i18n="dashboard.weaponKansCosts">Weapon Kans Costs (per bracket)</div>
-                        <button class="edit-toggle-btn" type="button" onclick="toggleTileEdit(this)">Edit</button>
-            <div class="grid-2col-input">
+            <div class="tile-title" data-i18n="dashboard.weaponKansCosts">Weapon level EXP & Kans Costs (per bracket)</div>
+            <button class="edit-toggle-btn" type="button" onclick="toggleTileEdit(this)">Edit</button>
+            <div class="grid-3col-input">
                 <div class="grid-header">Level</div>
+                <div class="grid-header">EXP (tamahagane)</div>
                 <div class="grid-header">Kans</div>
+
+                <div>1-20</div>
+                <input type="text" id="dash-weapon-exp-1-20" value="0" disabled>
+                <input type="number" id="dash-weapon-asc-kans-1-20" min="0" step="1" value="4875" disabled>
+
                 <div>20-30</div>
-                <input type="number" id="dash-gold-20-30" min="0" step="1" value="1500" disabled>
-                
+                <input type="text" id="dash-weapon-exp-20-30" value="0" disabled>
+                <input type="number" id="dash-weapon-asc-kans-20-30" min="0" step="1" value="8500" disabled>
+
                 <div>30-40</div>
-                <input type="number" id="dash-gold-30-40" min="0" step="1" value="3000" disabled>
-                
+                <input type="text" id="dash-weapon-exp-30-40" value="0" disabled>
+                <input type="number" id="dash-weapon-asc-kans-30-40" min="0" step="1" value="15875" disabled>
+
                 <div>40-50</div>
-                <input type="number" id="dash-gold-40-50" min="0" step="1" value="6000" disabled>
-                
+                <input type="text" id="dash-weapon-exp-40-50" value="0" disabled>
+                <input type="number" id="dash-weapon-asc-kans-40-50" min="0" step="1" value="28125" disabled>
+
                 <div>50-60</div>
-                <input type="number" id="dash-gold-50-60" min="0" step="1" value="9000" disabled>
-                
+                <input type="text" id="dash-weapon-exp-50-60" value="0" disabled>
+                <input type="number" id="dash-weapon-asc-kans-50-60" min="0" step="1" value="45875" disabled>
+
                 <div>60-70</div>
-                <input type="number" id="dash-gold-60-70" min="0" step="1" value="12000" disabled>
-                
+                <input type="text" id="dash-weapon-exp-60-70" value="0" disabled>
+                <input type="number" id="dash-weapon-asc-kans-60-70" min="0" step="1" value="67875" disabled>
+
                 <div>70-80</div>
-                <input type="number" id="dash-gold-70-80" min="0" step="1" value="18000" disabled>
-                
+                <input type="text" id="dash-weapon-exp-70-80" value="0" disabled>
+                <input type="number" id="dash-weapon-asc-kans-70-80" min="0" step="1" value="96000" disabled>
+
                 <div>80-90</div>
-                <input type="number" id="dash-gold-80-90" min="0" step="1" value="24000" disabled>
-                
+                <input type="text" id="dash-weapon-exp-80-90" value="0" disabled>
+                <input type="number" id="dash-weapon-asc-kans-80-90" min="0" step="1" value="129750" disabled>
+
                 <div>90-100</div>
-                <input type="number" id="dash-gold-90-100" min="0" step="1" value="30000" disabled>
+                <input type="text" id="dash-weapon-exp-90-100" value="0" disabled>
+                <input type="number" id="dash-weapon-asc-kans-90-100" min="0" step="1" value="159625" disabled>
             </div>
         </div>
 
-        <div class="tile disabled">
-            <div class="tile-title" data-i18n="dashboard.weaponAscensionKans">Weapon ascension Kans Costs (per bracket)</div>
-                        <button class="edit-toggle-btn" type="button" onclick="toggleTileEdit(this)">Edit</button>
-            <div class="grid-2col-input">
-                <div class="grid-header">Level</div>
-                <div class="grid-header">Kans</div>
-                <div>20-30</div>
-                <input type="number" id="dash-weapon-asc-kans-20-30" min="0" step="1" value="500" disabled>
-                
-                <div>30-40</div>
-                <input type="number" id="dash-weapon-asc-kans-30-40" min="0" step="1" value="1000" disabled>
-                
-                <div>40-50</div>
-                <input type="number" id="dash-weapon-asc-kans-40-50" min="0" step="1" value="2000" disabled>
-                
-                <div>50-60</div>
-                <input type="number" id="dash-weapon-asc-kans-50-60" min="0" step="1" value="3000" disabled>
-                
-                <div>60-70</div>
-                <input type="number" id="dash-weapon-asc-kans-60-70" min="0" step="1" value="4000" disabled>
-                
-                <div>70-80</div>
-                <input type="number" id="dash-weapon-asc-kans-70-80" min="0" step="1" value="6000" disabled>
-                
-                <div>80-90</div>
-                <input type="number" id="dash-weapon-asc-kans-80-90" min="0" step="1" value="8000" disabled>
-                
-                <div>90-100</div>
-                <input type="number" id="dash-weapon-asc-kans-90-100" min="0" step="1" value="10000" disabled>
-            </div>
-        </div>
+        <!-- Removed duplicate Weapon ascension Kans tile; values are in Hammers tile above -->
     </div>
 </div>
 
@@ -378,7 +358,7 @@
     </div>
 
     <div class="tile disabled" style="max-width: 1000px;">
-        <div class="tile-title" data-i18n="skill.skillArtCosts">Art Costs (per level)</div>
+        <div class="tile-title">Art Level bracket materials & Kans costs</div>
             <button class="edit-toggle-btn" type="button" onclick="toggleTileEdit(this)">Edit</button>
         <div class="grid-5col-input">
             <div class="grid-header">Level</div>

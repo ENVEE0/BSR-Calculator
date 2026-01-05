@@ -150,12 +150,28 @@ function loadSettings() {
 
         return settings;
     } catch (e) {
+        console.error('Error loading saved settings (bsrSettings). Falling back to defaults.', e);
+        try {
+            console.debug('Raw bsrSettings content:', localStorage.getItem('bsrSettings'));
+        } catch (ex) {
+            console.debug('Could not read raw bsrSettings:', ex);
+        }
         return structuredClone(defaultSettings);
     }
 }
 
 function saveSettings(settings) {
-    localStorage.setItem('bsrSettings', JSON.stringify(settings));
+    try {
+        localStorage.setItem('bsrSettings', JSON.stringify(settings));
+        try {
+            const verify = localStorage.getItem('bsrSettings');
+            console.debug('Saved bsrSettings (size:', verify ? verify.length : 0, 'chars)');
+        } catch (e) {
+            console.warn('Saved bsrSettings but could not verify readback.', e);
+        }
+    } catch (e) {
+        console.error('Failed to save settings to localStorage (bsrSettings):', e);
+    }
 }
 
 let settings = loadSettings();
@@ -362,7 +378,32 @@ function toggleDashboardTabVisibility() {
 function initDashboardUI() {
     const setVal = (id, val) => {
         const el = document.getElementById(id);
-        if (el) el.value = val;
+        if (!el) return;
+        // If the element is disabled (display-only) we want readable formatting
+        // but input[type=number] cannot accept spaces — put plain numeric string there.
+        if (el.disabled) {
+            if (val == null || val === '') {
+                el.value = '';
+                return;
+            }
+            if (el.tagName === 'INPUT' && el.type === 'number') {
+                if (typeof val === 'string') {
+                    // Remove spaces/commas so the number input stays valid
+                    el.value = val.replace(/\s+/g, '').replace(/,/g, '');
+                } else {
+                    el.value = String(val);
+                }
+            } else {
+                const num = Number(val);
+                if (Number.isFinite(num)) {
+                    el.value = formatNumberWithSpaces(num);
+                } else {
+                    el.value = String(val);
+                }
+            }
+        } else {
+            el.value = val;
+        }
     };
 
     setVal('dash-book-green', settings.books.green);
@@ -370,52 +411,36 @@ function initDashboardUI() {
     setVal('dash-book-purple', settings.books.purple);
     setVal('dash-book-yellow', settings.books.yellow);
 
-    setVal('dash-essence-20-30-green', settings.essences['20-30'].green);
-    setVal('dash-essence-20-30-blue', settings.essences['20-30'].blue);
-    setVal('dash-essence-20-30-purple', settings.essences['20-30'].purple);
-    setVal('dash-essence-30-40-green', settings.essences['30-40'].green);
-    setVal('dash-essence-30-40-blue', settings.essences['30-40'].blue);
-    setVal('dash-essence-30-40-purple', settings.essences['30-40'].purple);
-    setVal('dash-essence-40-50-green', settings.essences['40-50'].green);
-    setVal('dash-essence-40-50-blue', settings.essences['40-50'].blue);
-    setVal('dash-essence-40-50-purple', settings.essences['40-50'].purple);
-    setVal('dash-essence-50-60-green', settings.essences['50-60'].green);
-    setVal('dash-essence-50-60-blue', settings.essences['50-60'].blue);
-    setVal('dash-essence-50-60-purple', settings.essences['50-60'].purple);
-    setVal('dash-essence-60-70-green', settings.essences['60-70'].green);
-    setVal('dash-essence-60-70-blue', settings.essences['60-70'].blue);
-    setVal('dash-essence-60-70-purple', settings.essences['60-70'].purple);
-    setVal('dash-essence-70-80-green', settings.essences['70-80'].green);
-    setVal('dash-essence-70-80-blue', settings.essences['70-80'].blue);
-    setVal('dash-essence-70-80-purple', settings.essences['70-80'].purple);
-    setVal('dash-essence-80-90-green', settings.essences['80-90'].green);
-    setVal('dash-essence-80-90-blue', settings.essences['80-90'].blue);
-    setVal('dash-essence-80-90-purple', settings.essences['80-90'].purple);
-    setVal('dash-essence-90-100-green', settings.essences['90-100'].green);
-    setVal('dash-essence-90-100-blue', settings.essences['90-100'].blue);
-    setVal('dash-essence-90-100-purple', settings.essences['90-100'].purple);
+    // Populate merged bracket inputs (green/blue/purple + ascension kans)
+    const BRACKETS = ['20-30','30-40','40-50','50-60','60-70','70-80','80-90','90-100'];
+    BRACKETS.forEach(key => {
+        setVal(`dash-bracket-${key}-green`, settings.essences[key].green);
+        setVal(`dash-bracket-${key}-blue`, settings.essences[key].blue);
+        setVal(`dash-bracket-${key}-purple`, settings.essences[key].purple);
+        setVal(`dash-bracket-${key}-kans`, settings.character.ascensionKans[key]);
+    });
 
-    // Character kans
+    // Character kans + EXP per bracket (EXP shown formatted, kans editable)
+    setVal('dash-exp-1-20', formatNumberWithSpaces((expData[1] && expData[1][20]) || 0));
     setVal('dash-char-kans-1-20', settings.character.kans['1-20']);
+    setVal('dash-exp-20-30', formatNumberWithSpaces((expData[20] && expData[20][30]) || 0));
     setVal('dash-char-kans-20-30', settings.character.kans['20-30']);
+    setVal('dash-exp-30-40', formatNumberWithSpaces((expData[30] && expData[30][40]) || 0));
     setVal('dash-char-kans-30-40', settings.character.kans['30-40']);
+    setVal('dash-exp-40-50', formatNumberWithSpaces((expData[40] && expData[40][50]) || 0));
     setVal('dash-char-kans-40-50', settings.character.kans['40-50']);
+    setVal('dash-exp-50-60', formatNumberWithSpaces((expData[50] && expData[50][60]) || 0));
     setVal('dash-char-kans-50-60', settings.character.kans['50-60']);
+    setVal('dash-exp-60-70', formatNumberWithSpaces((expData[60] && expData[60][70]) || 0));
     setVal('dash-char-kans-60-70', settings.character.kans['60-70']);
+    setVal('dash-exp-70-80', formatNumberWithSpaces((expData[70] && expData[70][80]) || 0));
     setVal('dash-char-kans-70-80', settings.character.kans['70-80']);
+    setVal('dash-exp-80-90', formatNumberWithSpaces((expData[80] && expData[80][90]) || 0));
     setVal('dash-char-kans-80-90', settings.character.kans['80-90']);
+    setVal('dash-exp-90-100', formatNumberWithSpaces((expData[90] && expData[90][100]) || 0));
     setVal('dash-char-kans-90-100', settings.character.kans['90-100']);
 
-    // Character ascension kans
-    setVal('dash-char-asc-kans-1-20', settings.character.ascensionKans['1-20']);
-    setVal('dash-char-asc-kans-20-30', settings.character.ascensionKans['20-30']);
-    setVal('dash-char-asc-kans-30-40', settings.character.ascensionKans['30-40']);
-    setVal('dash-char-asc-kans-40-50', settings.character.ascensionKans['40-50']);
-    setVal('dash-char-asc-kans-50-60', settings.character.ascensionKans['50-60']);
-    setVal('dash-char-asc-kans-60-70', settings.character.ascensionKans['60-70']);
-    setVal('dash-char-asc-kans-70-80', settings.character.ascensionKans['70-80']);
-    setVal('dash-char-asc-kans-80-90', settings.character.ascensionKans['80-90']);
-    setVal('dash-char-asc-kans-90-100', settings.character.ascensionKans['90-100']);
+    // Character ascension kans are populated together with bracket inputs above
 
     // Weapon tamahagane EXP
     setVal('dash-tamahagane-exp-green', settings.weapon.tamahaganeExp.green);
@@ -448,6 +473,15 @@ function initDashboardUI() {
     setVal('dash-hammer-90-100-green', settings.weapon.hammers['90-100'].green);
     setVal('dash-hammer-90-100-blue', settings.weapon.hammers['90-100'].blue);
     setVal('dash-hammer-90-100-purple', settings.weapon.hammers['90-100'].purple);
+    // Mirror weapon ascension kans for display in the Hammers tile
+    setVal('dash-hammer-20-30-kans', settings.weapon.ascensionKans['20-30']);
+    setVal('dash-hammer-30-40-kans', settings.weapon.ascensionKans['30-40']);
+    setVal('dash-hammer-40-50-kans', settings.weapon.ascensionKans['40-50']);
+    setVal('dash-hammer-50-60-kans', settings.weapon.ascensionKans['50-60']);
+    setVal('dash-hammer-60-70-kans', settings.weapon.ascensionKans['60-70']);
+    setVal('dash-hammer-70-80-kans', settings.weapon.ascensionKans['70-80']);
+    setVal('dash-hammer-80-90-kans', settings.weapon.ascensionKans['80-90']);
+    setVal('dash-hammer-90-100-kans', settings.weapon.ascensionKans['90-100']);
 
     // Weapon gold
     setVal('dash-gold-20-30', settings.weapon.gold['20-30']);
@@ -460,6 +494,7 @@ function initDashboardUI() {
     setVal('dash-gold-90-100', settings.weapon.gold['90-100']);
 
     // Weapon ascension kans
+    setVal('dash-weapon-asc-kans-1-20', settings.weapon.ascensionKans['1-20']);
     setVal('dash-weapon-asc-kans-20-30', settings.weapon.ascensionKans['20-30']);
     setVal('dash-weapon-asc-kans-30-40', settings.weapon.ascensionKans['30-40']);
     setVal('dash-weapon-asc-kans-40-50', settings.weapon.ascensionKans['40-50']);
@@ -468,6 +503,17 @@ function initDashboardUI() {
     setVal('dash-weapon-asc-kans-70-80', settings.weapon.ascensionKans['70-80']);
     setVal('dash-weapon-asc-kans-80-90', settings.weapon.ascensionKans['80-90']);
     setVal('dash-weapon-asc-kans-90-100', settings.weapon.ascensionKans['90-100']);
+
+    // Weapon EXP display per bracket (tamahagane XP costs)
+    setVal('dash-weapon-exp-1-20', settings.weapon.tamahaganeXpCosts['1-20']);
+    setVal('dash-weapon-exp-20-30', settings.weapon.tamahaganeXpCosts['20-30']);
+    setVal('dash-weapon-exp-30-40', settings.weapon.tamahaganeXpCosts['30-40']);
+    setVal('dash-weapon-exp-40-50', settings.weapon.tamahaganeXpCosts['40-50']);
+    setVal('dash-weapon-exp-50-60', settings.weapon.tamahaganeXpCosts['50-60']);
+    setVal('dash-weapon-exp-60-70', settings.weapon.tamahaganeXpCosts['60-70']);
+    setVal('dash-weapon-exp-70-80', settings.weapon.tamahaganeXpCosts['70-80']);
+    setVal('dash-weapon-exp-80-90', settings.weapon.tamahaganeXpCosts['80-90']);
+    setVal('dash-weapon-exp-90-100', settings.weapon.tamahaganeXpCosts['90-100']);
 
     // Weapon tamahagane XP costs
     setVal('dash-tamahagane-xp-1-20', settings.weapon.tamahaganeXpCosts['1-20']);
@@ -513,61 +559,29 @@ function initDashboardUI() {
     const status = document.getElementById('dash-save-status');
     if (saveBtn) {
         saveBtn.onclick = () => {
+            try {
+                const active = document.activeElement;
+                if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) {
+                    active.blur();
+                }
+            } catch (e) {
+                /* ignore blur errors */
+            }
             const readNum = (id, fallback) => {
                 const el = document.getElementById(id);
                 const v = el ? parseFloat(el.value) : NaN;
                 return Number.isFinite(v) ? v : fallback;
             };
 
-            const newSettings = {
+            let newSettings = {
                 books: {
                     green: readNum('dash-book-green', settings.books.green),
                     blue: readNum('dash-book-blue', settings.books.blue),
                     purple: readNum('dash-book-purple', settings.books.purple),
                     yellow: readNum('dash-book-yellow', settings.books.yellow)
                 },
-                essences: {
-                    '20-30': {
-                        green: readNum('dash-essence-20-30-green', settings.essences['20-30'].green),
-                        blue: readNum('dash-essence-20-30-blue', settings.essences['20-30'].blue),
-                        purple: readNum('dash-essence-20-30-purple', settings.essences['20-30'].purple)
-                    },
-                    '30-40': {
-                        green: readNum('dash-essence-30-40-green', settings.essences['30-40'].green),
-                        blue: readNum('dash-essence-30-40-blue', settings.essences['30-40'].blue),
-                        purple: readNum('dash-essence-30-40-purple', settings.essences['30-40'].purple)
-                    },
-                    '40-50': {
-                        green: readNum('dash-essence-40-50-green', settings.essences['40-50'].green),
-                        blue: readNum('dash-essence-40-50-blue', settings.essences['40-50'].blue),
-                        purple: readNum('dash-essence-40-50-purple', settings.essences['40-50'].purple)
-                    },
-                    '50-60': {
-                        green: readNum('dash-essence-50-60-green', settings.essences['50-60'].green),
-                        blue: readNum('dash-essence-50-60-blue', settings.essences['50-60'].blue),
-                        purple: readNum('dash-essence-50-60-purple', settings.essences['50-60'].purple)
-                    },
-                    '60-70': {
-                        green: readNum('dash-essence-60-70-green', settings.essences['60-70'].green),
-                        blue: readNum('dash-essence-60-70-blue', settings.essences['60-70'].blue),
-                        purple: readNum('dash-essence-60-70-purple', settings.essences['60-70'].purple)
-                    },
-                    '70-80': {
-                        green: readNum('dash-essence-70-80-green', settings.essences['70-80'].green),
-                        blue: readNum('dash-essence-70-80-blue', settings.essences['70-80'].blue),
-                        purple: readNum('dash-essence-70-80-purple', settings.essences['70-80'].purple)
-                    },
-                    '80-90': {
-                        green: readNum('dash-essence-80-90-green', settings.essences['80-90'].green),
-                        blue: readNum('dash-essence-80-90-blue', settings.essences['80-90'].blue),
-                        purple: readNum('dash-essence-80-90-purple', settings.essences['80-90'].purple)
-                    },
-                    '90-100': {
-                        green: readNum('dash-essence-90-100-green', settings.essences['90-100'].green),
-                        blue: readNum('dash-essence-90-100-blue', settings.essences['90-100'].blue),
-                        purple: readNum('dash-essence-90-100-purple', settings.essences['90-100'].purple)
-                    }
-                },
+                // essences will be populated from merged bracket inputs below
+                essences: {},
                 character: {
                     kans: {
                         '1-20': readNum('dash-char-kans-1-20', settings.character.kans['1-20']),
@@ -580,17 +594,7 @@ function initDashboardUI() {
                         '80-90': readNum('dash-char-kans-80-90', settings.character.kans['80-90']),
                         '90-100': readNum('dash-char-kans-90-100', settings.character.kans['90-100'])
                     },
-                    ascensionKans: {
-                        '1-20': readNum('dash-char-asc-kans-1-20', settings.character.ascensionKans['1-20']),
-                        '20-30': readNum('dash-char-asc-kans-20-30', settings.character.ascensionKans['20-30']),
-                        '30-40': readNum('dash-char-asc-kans-30-40', settings.character.ascensionKans['30-40']),
-                        '40-50': readNum('dash-char-asc-kans-40-50', settings.character.ascensionKans['40-50']),
-                        '50-60': readNum('dash-char-asc-kans-50-60', settings.character.ascensionKans['50-60']),
-                        '60-70': readNum('dash-char-asc-kans-60-70', settings.character.ascensionKans['60-70']),
-                        '70-80': readNum('dash-char-asc-kans-70-80', settings.character.ascensionKans['70-80']),
-                        '80-90': readNum('dash-char-asc-kans-80-90', settings.character.ascensionKans['80-90']),
-                        '90-100': readNum('dash-char-asc-kans-90-100', settings.character.ascensionKans['90-100'])
-                    }
+                    ascensionKans: {}
                 },
                 weapon: {
                     tamahaganeExp: {
@@ -652,6 +656,7 @@ function initDashboardUI() {
                         '90-100': readNum('dash-gold-90-100', settings.weapon.gold['90-100'])
                     },
                     ascensionKans: {
+                        '1-20': readNum('dash-weapon-asc-kans-1-20', settings.weapon.ascensionKans['1-20']),
                         '20-30': readNum('dash-weapon-asc-kans-20-30', settings.weapon.ascensionKans['20-30']),
                         '30-40': readNum('dash-weapon-asc-kans-30-40', settings.weapon.ascensionKans['30-40']),
                         '40-50': readNum('dash-weapon-asc-kans-40-50', settings.weapon.ascensionKans['40-50']),
@@ -791,6 +796,17 @@ function initDashboardUI() {
                 }
             };
 
+            // Populate essences and character ascension kans from merged bracket inputs
+            const BRACKETS = ['20-30','30-40','40-50','50-60','60-70','70-80','80-90','90-100'];
+            BRACKETS.forEach(k => {
+                newSettings.essences[k] = {
+                    green: readNum(`dash-bracket-${k}-green`, settings.essences[k].green),
+                    blue: readNum(`dash-bracket-${k}-blue`, settings.essences[k].blue),
+                    purple: readNum(`dash-bracket-${k}-purple`, settings.essences[k].purple)
+                };
+                newSettings.character.ascensionKans[k] = readNum(`dash-bracket-${k}-kans`, settings.character.ascensionKans[k] || 0);
+            });
+
             newSettings.farmingRewards = readFarmingRewardsFromInputs(settings.farmingRewards, readNum);
 
             settings = newSettings;
@@ -867,6 +883,14 @@ const TAMAHAGANE_BRACKETS = [
 // ============================================
 // DOM helpers and input wheel/select handlers have been moved to `utils.js`.
 // `utils.js` exposes `window.DOMHelpers` and `window.attachWheelAndSelectHandlers`.
+
+// Format number with space as thousands separator, e.g. 35792 -> "35 792"
+function formatNumberWithSpaces(n) {
+    if (n == null || n === '') return '';
+    const num = Number(n);
+    if (!Number.isFinite(num)) return String(n);
+    return String(Math.round(num)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
 
 // ============================================
 // CALCULATION FUNCTIONS
